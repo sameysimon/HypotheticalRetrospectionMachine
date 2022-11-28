@@ -1,0 +1,36 @@
+{
+    "Name": "Trolley Problem",
+    "Actions": {
+        "PullLever": {
+            "StartTime": 0,
+            "EndTime": -1,
+            "preconditions":{"bystander": true},
+            "effects": ["SecondTrackPath"]
+        },
+        "Whistle" : {
+            "StartTime": 0,
+            "EndTime": -1,
+            "preconditions": {},
+            "effects": ["FirstTrackPath"]
+        }
+    },
+    "Mechanisms": {
+        "SecondTrackPath": {"and": [{"Name": "A_Alive", "Value": false, "Type": "State", "Probability":1}]},
+        "FirstTrackPath": {"and": [{"Name": "B_Alive", "Value": false, "Type": "State", "Probability":1},
+            {"Name": "C_Alive", "Value": false, "Type": "State", "Probability":1},
+            {"Name": "D_Alive", "Value": false, "Type": "State", "Probability":1},
+            {"Name": "E_Alive", "Value": false, "Type": "State", "Probability":1},
+            {"Name": "F_Alive", "Value": false, "Type": "State", "Probability":1}
+        ]}
+    },
+    "State": {
+        "bystander":true,
+        "A_Alive":true,
+        "B_Alive":true,
+        "C_Alive":true,
+        "D_Alive":true,
+        "E_Alive":true,
+        "F_Alive":true
+    },
+    "Values": [["A_Alive", "B_Alive", "C_Alive", "D_Alive", "E_Alive", "F_Alive"],["bystander"]]
+}
