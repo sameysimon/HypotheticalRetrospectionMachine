@@ -1,0 +1,46 @@
+{
+    "Name": "Coin Flip or Apple",
+    "Actions": {
+        "Apple": {
+            "StartTime": 0,
+            "EndTime": -1,
+            "preconditions":{"madeChoice": false},
+            "effects": ["ChooseApple"]
+        },
+        "CoinFlip" : {
+            "StartTime": 0,
+            "EndTime": -1,
+            "preconditions": {"madeChoice": false},
+            "effects": ["ChooseCoin"]
+        }
+    },
+    "Mechanisms": {
+        "ChooseApple": 
+            {"and": [
+                {"Name": "madeChoice", "Value":true, "Probability":1, "Type":"State"},
+                {"Name": "getApple", "Value": true, "Probability": 1, "Type":"State"}
+            ]},
+        "ChooseCoin":
+            {"and": [
+                {"Name": "madeChoice", "Value":true, "Probability": 1, "Type": "State"},
+                {"Name": "flipCoin", "Probability": 1, "Type": "Mech"}
+            ]},
+        "flipCoin":
+            {"or": [
+                {"Name": "getHawaii", "Value": true, "Probability": 0.5, "Type": "State"},
+                {"Name": "getNothing", "Value": true, "Probability":0.5, "Type": "State"}
+            ]}
+    },
+    "State": {
+        "madeChoice":false, "getHawaii":false, "getNothing":false, "getApple": false
+    },
+
+
+    "Values": [
+        {"getHawaii": 5, "getCamping": 1}, 
+        {"getApple": 1, "getTwoApple": 2}
+    ]
+}
+
+
+
