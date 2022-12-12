@@ -26,6 +26,7 @@ class OutcomeFinder:
                 newPath = Path(copy.deepcopy(initState), self.Utilities)
                 newPath.addAction(self.actions[seedAction], seedAction)
                 # Add initial path containing initial action to dictionary for paths from this action.
+                self.Out.append([])
                 self.Out[count].append(newPath)
                 # Adds to list of paths, all possible end points from action.
                 self._findActionOutcomes(self.Out[count], self.Out[count][0], self.actions[seedAction], time=time)
