@@ -33,6 +33,9 @@
     "D_Alive":true,
     "E_Alive":true,
     "F_Alive":true
-}
+},
+"Values": [
+    {"A_Alive": 1, "B_Alive": 1, "C_Alive":1, "D_Alive":1, "E_Alive":1, "F_Alive":1}
+]
 }
 

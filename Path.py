@@ -8,9 +8,10 @@ class Path:
         self.Sequence = []
 
         self.Utility = []
-        self.bestUtilityClass = len(Utilities)-1
+        self.bestUtilityClass = len(Utilities) - 1
         self.defaultUtility(Utilities)
         
+        self.bestExpectation = 0
 
         self.attacks = []
         self.attackedBy = []
@@ -32,18 +33,20 @@ class Path:
 
     def AddToState(self, variable, value, prob=1, Utilities=[]):
         msg = (variable + " changed from " + str(self.State[variable]) + " to " + str(value) + " with " + str(prob) + " chance.")
-        self.State[variable] = value
+        
         self.Probability *= prob
         if self.State[variable] != value:
             self.setUtility(variable=variable, value=value, Utilities=Utilities)
-
+        self.State[variable] = value
         self.Log.append(msg)
         self.Sequence.append({"Name": variable, "Value": value, "Prob":prob, "Type":"State"})
 
     def defaultUtility(self, Utilities):
-        for var in self.State:
+        for utilityClass in Utilities:
             self.Utility.append(0)
-            self.setUtility(var, self.State[var], Utilities)
+            
+        
+            
 
 
     def setUtility(self, variable, value, Utilities):
@@ -54,14 +57,14 @@ class Path:
                 if (value == True):    
                     self.Utility[utilityClassCount] += utilityClass[variable]
                     # Check if this now the best utility class.
-                    if (utilityClassCount < self.bestUtilityClass and self.Utility[utilityClassCount] > 0):
+                    if (utilityClassCount < self.bestUtilityClass and self.Utility[utilityClassCount] > self.Utility[self.bestUtilityClass]):
                         self.bestUtilityClass = utilityClassCount
                 else:
                     self.Utility[utilityClassCount] -= utilityClass[variable]
                     # May no longer be the be the best utility class now.
                     # So, must see which next highest class is greater than 0, having the greatest utility.
                     if (utilityClassCount == self.bestUtilityClass and self.Utility[utilityClassCount] < 0):
-                        self.bestUtilityClass = len(Utilities)
+                        self.bestUtilityClass = len(Utilities)-1
                         for i in range(utilityClassCount+1, len(Utilities)):
                             if self.Utility[i] > 0:
                                 self.bestUtilityClass = i
@@ -93,17 +96,34 @@ class Path:
         for var in self.State:
             output += var + " is " + self.State[var]
         output += "\n"
-
-    def compareTo(self, otherPath):
-        if otherPath.bestUtilityClass < self.bestUtilityClass:
-            return -1
-        elif otherPath.bestUtilityClass > self.bestUtilityClass:
-            return 1
-        else:
-            if otherPath.Utility[otherPath.bestUtilityClass]*self.Probability < self.Utility[self.bestUtilityClass]*self.Probability:
-                return -1
-            elif otherPath.Utility[otherPath.bestUtilityClass]*otherPath.Probability > self.Utility[self.bestUtilityClass]*self.Probability:
+    
+    # Returns 1 if self attacks Two.
+    def compare(self, pathTwo):
+        pathOneClass = self.bestUtilityClass
+        pathTwoClass = pathTwo.bestUtilityClass
+        # Check if path one has better utility class or, (if the same class) one has better utility.
+        if (pathOneClass < pathTwoClass) or ((pathOneClass == pathTwoClass) and self.Utility[pathOneClass] > pathTwo.Utility[pathOneClass]):
+            # Rule two. Check path two doesn't have higher expectation.
+            if (self > pathTwo.bestExpectation):
                 return 1
-            else:
-                return 0
+        #Reverse
+        if (pathOneClass > pathTwoClass) or ((pathOneClass == pathTwoClass) and self.Utility[pathOneClass] < pathTwo.Utility[pathOneClass]):
+            # Rule two. Check path one doesn't have higher expectation.
+            if (self.bestExpectation < pathTwo):
+                return -1
 
+        # If neither of these succeeded, must be equal.
+        return 0
+
+    def __lt__(pathOne, pathTwo):
+        #These seem opposite, but lower utility classes are better.
+        if pathOne.bestUtilityClass < pathTwo.bestUtilityClass:
+            return False
+        if pathOne.bestUtilityClass > pathTwo.bestUtilityClass:
+            return True
+
+        if pathOne.Utility[pathOne.bestUtilityClass]*pathOne.Probability < pathTwo.Utility[pathTwo.bestUtilityClass]*pathTwo.Probability:
+            return True
+        if pathOne.Utility[pathOne.bestUtilityClass]*pathOne.Probability > pathTwo.Utility[pathTwo.bestUtilityClass]*pathTwo.Probability:
+            return False
+        return 0

@@ -1,9 +1,10 @@
 from OutcomeFinder import OutcomeFinder
-from OutcomeArguer import OutcomeArguer
+from ArgumentGraphBuilder import ArgumentGraphBuilder
 
 of = OutcomeFinder()
-actionBranches =  of.FindOutcomes('Scenarios/CoinFlip.json')
+actionBranches =  of.FindOutcomes('Scenarios/TrolleySituation.json')
 
-oa = OutcomeArguer(actionBranches)
+oa = ArgumentGraphBuilder(actionBranches)
 
+oa.ToString()
 

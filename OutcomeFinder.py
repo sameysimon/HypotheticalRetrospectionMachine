@@ -1,4 +1,5 @@
 from Path import Path
+from Action import Action
 import io
 import copy
 import json
@@ -17,27 +18,37 @@ class OutcomeFinder:
         time = 0
 
         # Maps action names to possible end states
-        self.Out = []
+        self.Actions = []
 
         # Iterates through each action
         for count, seedAction in enumerate(self.actions):
             if (self.checkActionCompatable(self.actions[seedAction], time, initState)):
-                # Creates a path object to represent each end state. Starts with one, but more can be added for each branch.
+                # Create Action object for new choice being investigated.
+                self.Actions.append(Action(seedAction))
+                # Create a path object to represent each end state. Starts with one, but more can be added for each branch.
                 newPath = Path(copy.deepcopy(initState), self.Utilities)
                 newPath.addAction(self.actions[seedAction], seedAction)
-                # Add initial path containing initial action to dictionary for paths from this action.
-                self.Out.append([])
-                self.Out[count].append(newPath)
+                # Add initial path containing initial action to action object.
+                self.Actions[count].addPath(newPath)
                 # Adds to list of paths, all possible end points from action.
-                self._findActionOutcomes(self.Out[count], self.Out[count][0], self.actions[seedAction], time=time)
-                
+                self._findActionOutcomes(actionPaths=self.Actions[count].PathList, path=self.Actions[count].PathList[0], action=self.actions[seedAction], time=time)
+
+
+        for actionBranch in self.Actions:
+            if len(actionBranch.PathList) > 1:
+                actionBranch.PathList.sort()
+                actionBranch.PathList.reverse()
+            for path in actionBranch.PathList:
+                path.bestExpectation = actionBranch.PathList[0]
 
         # Temporary, prints all end points for each action.
-        for branch in self.Out:
-            print("Paths resulting from action " + branch[0].lastAction + "...")
-            for path in branch:
+        for actionBranch in self.Actions:
+            print("Paths resulting from action " + actionBranch.Name + "...")
+            for path in actionBranch.PathList:
                 print(path.ToString())
-        return self.Out
+        return self.Actions
+
+    
 
 
     # For each effect from the action, adds to actionPath, all outcome paths from choosing action

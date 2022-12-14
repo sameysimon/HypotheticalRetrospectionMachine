@@ -37,8 +37,8 @@
 
 
     "Values": [
-        {"getHawaii": 5, "getCamping": 1}, 
-        {"getApple": 1, "getTwoApple": 2}
+        {"getHawaii": 5}, 
+        {"getApple": 1}
     ]
 }
 
