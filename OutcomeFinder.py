@@ -45,13 +45,16 @@ class OutcomeFinder:
                 actionBranch.PathList.reverse()
             for path in actionBranch.PathList:
                 path.bestExpectation = actionBranch.PathList[0]
+                
+        return self.Actions
 
+    def ToString(self):
         # Temporary, prints all end points for each action.
         for actionBranch in self.Actions:
             print("Paths resulting from action " + actionBranch.Name + "...")
             for path in actionBranch.PathList:
                 print(path.ToString())
-        return self.Actions
+        
 
 
     # For each effect from the action, adds to actionPath, all outcome paths from choosing action

@@ -1,12 +1,12 @@
 from OutcomeFinder import OutcomeFinder
-from ArgumentGraphBuilder import ArgumentGraphBuilder
+from ArgumentGraph import ArgumentGraph
 from Laws.ExpectedUtility import ExpectedUtility
 
 of = OutcomeFinder()
-actionBranches =  of.FindOutcomes('Scenarios/CoinFlip.json')
-
-oa = ArgumentGraphBuilder(actionBranches)
+actionBranches =  of.FindOutcomes('Scenarios/TrolleySituation.json')
 
 
-oa.ToString()
+oa = ArgumentGraph(actionBranches)
+oa.ToString(actionBranches)
+oa.findMostAccepted(actionBranches)
 

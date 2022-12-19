@@ -12,6 +12,8 @@ class Path:
         self.Utility = []
         self.bestUtilityClass = len(Utilities) - 1
         self.defaultUtility(Utilities)
+
+        self.fullyAccepted = True
         
         self.bestExpectation = 0
 
