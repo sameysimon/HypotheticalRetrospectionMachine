@@ -7,37 +7,30 @@ import json
 
 class OutcomeFinder:
     # Returns a dictionary of each action to an array of its possible end states.
-    def FindOutcomes(self, fileName='Scenarios/DoorBell.json'):
-        with io.open(fileName) as data_file:
-            self.Model = json.load(data_file)
-
+    def FindOutcomes(self, scenario):
+        self.scenario = scenario
         self.pathID = 0
         self.ActionID = 0
-        self.actions = self.Model['Actions']
-        initState = self.Model['State']
-        self.mechanisms = self.Model['Mechanisms']
-        self.Utilities = self.Model['Values']
         time = 0
 
         # List of action objects containing correct paths.
         self.Actions = []
-        ExpectedUtility.init(self.Utilities, self.Actions)
+
         # Iterates through each action
-        for count, seedAction in enumerate(self.actions):
-            if (self.checkActionCompatable(self.actions[seedAction], time, initState)):
+        for count, seedAction in enumerate(scenario.Actions):
+            if (self.checkActionCompatable(self.scenario.Actions[seedAction], time, self.scenario.InitState)):
                 # Create Action object for new choice being investigated.
                 self.Actions.append(Action(count, seedAction))
                 # Create a path object to represent each end state. Starts with one, but more can be added for each branch.
-                newPath = Path(self.pathID, copy.deepcopy(initState), self.Utilities, self.Actions[count])
+                newPath = Path(self.pathID, copy.deepcopy(self.scenario.InitState), self.scenario.Utilities, self.Actions[count])
                 self.pathID += 1
 
-                newPath.addAction(self.actions[seedAction], seedAction)
+                newPath.addAction(self.scenario.Actions[seedAction], seedAction)
                 # Add initial path containing initial action to action object.
                 self.Actions[count].addPath(newPath)
                 self.Actions[count].rootAction = self.Actions[count]
                 # Adds to list of paths, all possible end points from action.
-                self._findActionOutcomes(actionPaths=self.Actions[count].PathList, path=self.Actions[count].PathList[0], action=self.actions[seedAction], time=time)
-
+                self._findActionOutcomes(actionPaths=self.Actions[count].PathList, path=self.Actions[count].PathList[0], action=self.scenario.Actions[seedAction], time=time)
 
         for actionBranch in self.Actions:
             if len(actionBranch.PathList) > 1:
@@ -54,13 +47,12 @@ class OutcomeFinder:
             print("Paths resulting from action " + actionBranch.Name + "...")
             for path in actionBranch.PathList:
                 print(path.ToString())
-        
 
 
     # For each effect from the action, adds to actionPath, all outcome paths from choosing action
     def _findActionOutcomes(self, actionPaths, path, action, time=0):
         for effect in action['effects']:
-            self._findMechOutcomes(actionPaths, path, self.mechanisms[effect], time)
+            self._findMechOutcomes(actionPaths, path, self.scenario.Mechanisms[effect], time)
 
     # For each possible outcome of the mechanism, adds to actionPath, all outcome paths resulting from mechanism.
     def _findMechOutcomes(self, actionPath, path, mech, time):
@@ -73,13 +65,13 @@ class OutcomeFinder:
                 for element in mech[operator]:
                     if element['Type'] == 'State':
                         #Add to path
-                        path.AddToState(element['Name'], element['Value'], Utilities=self.Utilities)
+                        path.AddToState(element['Name'], element['Value'], Utilities=self.scenario.Utilities)
                     elif (element['Type'] == 'Mech'):
-                        path.addMech(self.mechanisms[element['Name']], element['Probability'], element['Name'])
-                        self._findMechOutcomes(actionPath=actionPath, path=path, mech=self.mechanisms[element['Name']], time=time)
+                        path.addMech(self.scenario.Mechanisms[element['Name']], element['Probability'], element['Name'])
+                        self._findMechOutcomes(actionPath=actionPath, path=path, mech=self.scenario.Mechanisms[element['Name']], time=time)
                     elif(element['Type'] == 'Action'):
-                        path.addAction(self.actions[element['Name']], element['Name'])
-                        self._findActionOutcomes(actionPaths=actionPath, path=path, mech=self.mechanisms[self.actions['Name']], time=time)
+                        path.addAction(self.scenario.Actions[element['Name']], element['Name'])
+                        self._findActionOutcomes(actionPaths=actionPath, path=path, mech=self.scenario.Mechanisms[self.scenario.Actions['Name']], time=time)
             elif (operator=="or"):
                 # For every element of the rule, add its outcomes to a new path.
                 # 'Or' means branching at this stage. So create new paths from this one.
@@ -100,18 +92,18 @@ class OutcomeFinder:
                         newPath.bestUtilityClass = copy.deepcopy(path.bestUtilityClass)
                         newPath.Utility = copy.deepcopy(path.Utility)
 
-                        newPath.AddToState(element['Name'], element['Value'], element['Probability'], self.Utilities)
+                        newPath.AddToState(element['Name'], element['Value'], element['Probability'], self.scenario.Utilities)
                         
                         actionPath.append(newPath)
                     elif (element['Type'] == 'Mech'):
                         newPath = copy.deepcopy(path)
-                        newPath.addMech(self.mechanisms[element['Name']], element['Probability'], element['Name'])
+                        newPath.addMech(self.scenario.Mechanisms[element['Name']], element['Probability'], element['Name'])
                         actionPath.append(newPath)
-                        self._findMechOutcomes(actionPath, newPath, self.mechanisms[element['Name']], time)      
+                        self._findMechOutcomes(actionPath, newPath, self.scenario.Mechanisms[element['Name']], time)      
                     elif(element['Type'] == 'Action'):
                         # Add to queue to call findActionOutcomes
                         newPath = copy.deepcopy(path)
-                        newPath.addAction(self.actions[element['Name']], element['Action'])
+                        newPath.addAction(self.scenario.Actions[element['Name']], element['Action'])
                         self._findActionOutcomes(actionPath, newPath, element, time)
                     # Removes initial half finished path.
                     if (path in actionPath):
