@@ -1,5 +1,6 @@
 class Action:
-    def __init__(self, seedAction):
+    def __init__(self, ID, seedAction):
+        self.ID = ID
         self.Name = seedAction
         self.PathList = []
         self.fullyAccepted = True

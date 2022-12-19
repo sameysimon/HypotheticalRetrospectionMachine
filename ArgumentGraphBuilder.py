@@ -1,10 +1,11 @@
+from Laws.ExpectedUtility import ExpectedUtility
 class ArgumentGraphBuilder:
     def __init__(self, actionBranches):
         self.ActionBranches = actionBranches
         # Evaluate each action by iterating through its paths
         # Compare each path to every other action's paths and see if they attack each other.
 
-        # Iterate through first n-1 actions 
+        # Iterate through first n-1 actions
         for defenderActionIndex in range(0, len(self.ActionBranches)-1):
             # Iterate through the action's different branches.
             for defenderPath in self.ActionBranches[defenderActionIndex].PathList:
@@ -13,7 +14,7 @@ class ArgumentGraphBuilder:
                     for attackerPath in self.ActionBranches[attackerActionIndex].PathList:
                         
                         #Check if this branch attacks the other.
-                        compare = attackerPath.compare(defenderPath)
+                        compare = ExpectedUtility.doesAttack(attackerPath, defenderPath)
 
                         if compare > 0:
                             # Attacker has better state.

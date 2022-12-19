@@ -1,5 +1,6 @@
 from Path import Path
 from Action import Action
+from Laws.ExpectedUtility import ExpectedUtility
 import io
 import copy
 import json
@@ -10,26 +11,30 @@ class OutcomeFinder:
         with io.open(fileName) as data_file:
             self.Model = json.load(data_file)
 
+        self.pathID = 0
+        self.ActionID = 0
         self.actions = self.Model['Actions']
         initState = self.Model['State']
         self.mechanisms = self.Model['Mechanisms']
         self.Utilities = self.Model['Values']
-
         time = 0
 
-        # Maps action names to possible end states
+        # List of action objects containing correct paths.
         self.Actions = []
-
+        ExpectedUtility.init(self.Utilities, self.Actions)
         # Iterates through each action
         for count, seedAction in enumerate(self.actions):
             if (self.checkActionCompatable(self.actions[seedAction], time, initState)):
                 # Create Action object for new choice being investigated.
-                self.Actions.append(Action(seedAction))
+                self.Actions.append(Action(count, seedAction))
                 # Create a path object to represent each end state. Starts with one, but more can be added for each branch.
-                newPath = Path(copy.deepcopy(initState), self.Utilities)
+                newPath = Path(self.pathID, copy.deepcopy(initState), self.Utilities, self.Actions[count])
+                self.pathID += 1
+
                 newPath.addAction(self.actions[seedAction], seedAction)
                 # Add initial path containing initial action to action object.
                 self.Actions[count].addPath(newPath)
+                self.Actions[count].rootAction = self.Actions[count]
                 # Adds to list of paths, all possible end points from action.
                 self._findActionOutcomes(actionPaths=self.Actions[count].PathList, path=self.Actions[count].PathList[0], action=self.actions[seedAction], time=time)
 
@@ -48,12 +53,9 @@ class OutcomeFinder:
                 print(path.ToString())
         return self.Actions
 
-    
-
 
     # For each effect from the action, adds to actionPath, all outcome paths from choosing action
     def _findActionOutcomes(self, actionPaths, path, action, time=0):
-        
         for effect in action['effects']:
             self._findMechOutcomes(actionPaths, path, self.mechanisms[effect], time)
 
@@ -81,8 +83,22 @@ class OutcomeFinder:
                 for element in mech[operator]:
                     if element['Type'] == 'State':
                         #Add to path
+                        
                         newPath = copy.deepcopy(path)
+                        
+                        newPath.ID = copy.deepcopy(self.pathID)
+                        newPath = Path(copy.deepcopy(self.pathID), copy.deepcopy(path.State), {}, path.rootAction)
+                        self.pathID += 1
+                        newPath.Actions = copy.deepcopy(path.Actions)
+                        newPath.Mech = copy.deepcopy(path.Mech)
+                        newPath.Log = copy.deepcopy(path.Log)
+                        newPath.Sequence = copy.deepcopy(path.Sequence)
+                        newPath.lastAction = copy.deepcopy(path.lastAction)
+                        newPath.bestUtilityClass = copy.deepcopy(path.bestUtilityClass)
+                        newPath.Utility = copy.deepcopy(path.Utility)
+
                         newPath.AddToState(element['Name'], element['Value'], element['Probability'], self.Utilities)
+                        
                         actionPath.append(newPath)
                     elif (element['Type'] == 'Mech'):
                         newPath = copy.deepcopy(path)

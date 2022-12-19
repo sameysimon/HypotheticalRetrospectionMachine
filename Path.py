@@ -1,5 +1,7 @@
 class Path:
-    def __init__(self, state, Utilities) -> None:
+    def __init__(self, ID, state, Utilities, rootAction) -> None:
+        self.ID = ID
+        self.rootAction = rootAction
         self.Actions = []
         self.Mech = []
         self.Probability = 1
@@ -16,9 +18,8 @@ class Path:
         self.attacks = []
         self.attackedBy = []
         self.lastAction = ""
-
-        
     
+
     def addAction(self, action, actionName):
         self.lastAction = actionName
         self.Actions.append(action)
@@ -45,9 +46,6 @@ class Path:
         for utilityClass in Utilities:
             self.Utility.append(0)
             
-        
-            
-
 
     def setUtility(self, variable, value, Utilities):
         # Find referenced variable in utility classes
@@ -57,7 +55,7 @@ class Path:
                 if (value == True):    
                     self.Utility[utilityClassCount] += utilityClass[variable]
                     # Check if this now the best utility class.
-                    if (utilityClassCount < self.bestUtilityClass and self.Utility[utilityClassCount] > self.Utility[self.bestUtilityClass]):
+                    if (utilityClassCount < self.bestUtilityClass and self.Utility[utilityClassCount] > 0):
                         self.bestUtilityClass = utilityClassCount
                 else:
                     self.Utility[utilityClassCount] -= utilityClass[variable]
@@ -78,7 +76,7 @@ class Path:
     #     return output
 
     def ToString(self):
-        output = ""
+        output = "Path ID: " + str(self.ID) + "\n"
         for step in self.Sequence:
             if (step['Type'] == 'State'):
                 output += (step['Name'] + " changed to " + str(step['Value']) + " with " + str(step['Prob']) + " chance.")
@@ -114,6 +112,8 @@ class Path:
 
         # If neither of these succeeded, must be equal.
         return 0
+
+
 
     def __lt__(pathOne, pathTwo):
         #These seem opposite, but lower utility classes are better.
