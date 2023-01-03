@@ -24,9 +24,6 @@ class ArgumentGraph:
                             defenderPath.attacks.append(attackerPath)
                             attackerPath.attackedBy.append(defenderPath)
                             attackerPath.fullyAccepted = False
-                        else:
-                            #TODO: COMPARE BY ETHICAL RULES.
-                            print ("to do, implement ethical rules.")
         print("built argument tree.\n\n\n")
 
     def findMostAccepted(self, actionBranches):

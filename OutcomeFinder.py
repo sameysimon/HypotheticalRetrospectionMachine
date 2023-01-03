@@ -38,7 +38,7 @@ class OutcomeFinder:
                 actionBranch.PathList.reverse()
             for path in actionBranch.PathList:
                 path.bestExpectation = actionBranch.PathList[0]
-                
+  
         return self.Actions
 
     def ToString(self):

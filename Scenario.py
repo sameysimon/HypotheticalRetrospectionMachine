@@ -1,4 +1,5 @@
 import json
+import io
 class Scenario:
     def __init__(self, scenarioName='DefaultScenario'):
         self.Actions = {}
@@ -17,6 +18,15 @@ class Scenario:
 
         with open(fileName, 'w') as f:
             json.dump(data,f)
+
+    def readFromJSON(self, fileName):
+        with io.open(fileName) as data:
+            model = json.load(data)
+            self.Actions = model['Actions']
+            self.InitState = model['State']
+            self.Mechanisms = model['Mechanisms']
+            self.Utilities = model['Values']
+
 
     def addAction(self, name, preConds, effs, start, end):
         self.Actions[name] = {}

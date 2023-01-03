@@ -23,7 +23,8 @@ s.addValue(0,'fly', 1)
 
 s.writeToJSON('newFile.json')
 
-
+s = Scenario()
+s.readFromJSON('Scenarios/CoinFlip.json')
 
 of = OutcomeFinder()
 actionBranches =  of.FindOutcomes(s)
@@ -33,4 +34,3 @@ ExpectedUtility.init(s.Utilities, s.Actions)
 oa = ArgumentGraph(actionBranches)
 oa.ToString(actionBranches)
 oa.findMostAccepted(actionBranches)
-
