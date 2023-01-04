@@ -39,7 +39,12 @@
     "Values": [
         {"getHawaii": 5}, 
         {"getApple": 1}
-    ]
+    ],
+    
+    "Forebidden": {
+        "getHawaii": true
+    }
+
 }
 
 

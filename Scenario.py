@@ -1,5 +1,6 @@
 import json
 import io
+
 class Scenario:
     def __init__(self, scenarioName='DefaultScenario'):
         self.Actions = {}
@@ -7,6 +8,11 @@ class Scenario:
         self.Mechanisms = {}
         self.Utilities = []
         self.Name = scenarioName
+        self.Considerations = []
+
+    def addConsideration(self, rule):
+        rule.addToScenario(self)
+        self.Considerations.append(rule)
         
     def writeToJSON(self, fileName):
         data = {}
@@ -44,7 +50,6 @@ class Scenario:
             mechanism[connector] = []
         mechanism[connector].append({"Name": name, "Value": value, "Probability": prob, "Type": type})
 
-
     def addState(self, name, Value):
         self.InitState[name] = Value
     
@@ -54,3 +59,4 @@ class Scenario:
             self.Utilities.append({})
         self.Utilities[utilClass][name] = util
     
+

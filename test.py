@@ -1,6 +1,9 @@
 from OutcomeFinder import OutcomeFinder
 from ArgumentGraph import ArgumentGraph
+
+
 from Laws.ExpectedUtility import ExpectedUtility
+from Laws.DeontologicalBanList import DeontologicalBanList
 
 from Scenario import Scenario
 
@@ -23,14 +26,23 @@ s.addValue(0,'fly', 1)
 
 s.writeToJSON('newFile.json')
 
+
+
+
 s = Scenario()
-s.readFromJSON('Scenarios/CoinFlip.json')
+s.readFromJSON('Scenarios/TrolleySituation.json')
+
+s.addConsideration(ExpectedUtility())
+
+dbl = DeontologicalBanList()
+dbl.addForebiddenLiteral('madeChoice', True)
+dbl.importListFromScenario(fileName='Scenarios/TrolleySituation.json')
+s.addConsideration(dbl)
 
 of = OutcomeFinder()
 actionBranches =  of.FindOutcomes(s)
 of.ToString()
 
-ExpectedUtility.init(s.Utilities, s.Actions)
-oa = ArgumentGraph(actionBranches)
+oa = ArgumentGraph(actionBranches, s.Considerations)
 oa.ToString(actionBranches)
 oa.findMostAccepted(actionBranches)

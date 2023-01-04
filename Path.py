@@ -20,7 +20,7 @@ class Path:
         self.attacks = []
         self.attackedBy = []
         self.lastAction = ""
-    
+
 
     def addAction(self, action, actionName):
         self.lastAction = actionName

@@ -16,7 +16,8 @@
 },
 "Mechanisms": {
     "SecondTrackPath": 
-        {"and": [{"Name": "A_Alive", "Value": false, "Type": "State", "Probability":1}]},
+        {"and": [{"Name": "A_Alive", "Value": false, "Type": "State", "Probability":1},
+        {"Name": "bystander", "Value": false, "Type": "State", "Probability": 1}]},
     "FirstTrackPath": 
         {"and": [{"Name": "B_Alive", "Value": false, "Type": "State", "Probability":1},
         {"Name": "C_Alive", "Value": false, "Type": "State", "Probability":1},
@@ -36,6 +37,9 @@
 },
 "Values": [
     {"A_Alive": 1, "B_Alive": 1, "C_Alive":1, "D_Alive":1, "E_Alive":1, "F_Alive":1}
-]
+],
+"Forebidden": {
+    "bystander": false
+}
 }
 
