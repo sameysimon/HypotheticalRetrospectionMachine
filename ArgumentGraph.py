@@ -1,5 +1,3 @@
-from Laws.ExpectedUtility import ExpectedUtility
-from Laws.DeontologicalBanList import DeontologicalBanList
 class ArgumentGraph:
     def __init__(self, actionBranches, considerations):
         # Evaluate each action by iterating through its paths
@@ -38,11 +36,12 @@ class ArgumentGraph:
                 print("Path ID {0} attacks ID {1} with rule {2}".format(attackerPath.ID, defenderPath.ID, law.Label))
             elif new==-1:
                 print("Path ID {0} attacks ID {1} with rule {2}".format(defenderPath.ID, attackerPath.ID, law.Label))
-                
-            if compare != new and compare == 0:
-                compare = new
-            elif compare != new:
+            
+            
+            if (compare == -1 and new == 1) or (compare == 1 and new == -1):
                 return 2
+            if new != 0:
+                compare = new
         return compare
                 
 
@@ -55,10 +54,10 @@ class ArgumentGraph:
             for path in action.PathList:
                 if path.fullyAccepted:
                     acceptability[action.ID] += path.Probability
-            if acceptability[mostAcceptedActionID] < acceptability[path.rootAction.ID]:
-                mostAcceptedActionID = path.rootAction.ID
             if acceptability[mostAcceptedActionID] != acceptability[path.rootAction.ID]:
                 allEqualFlag = False
+            if acceptability[mostAcceptedActionID] < acceptability[path.rootAction.ID]:
+                mostAcceptedActionID = path.rootAction.ID
             print(action.Name + " acceptability is " + str(acceptability[action.ID]))
             
         if allEqualFlag:

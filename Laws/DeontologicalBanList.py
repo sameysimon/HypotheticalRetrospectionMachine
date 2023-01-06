@@ -57,7 +57,7 @@ class DeontologicalBanList(Rule):
     def importListFromScenario(self, fileName):
         with io.open(fileName) as data:
             model = json.load(data)
-            self.forebidden = model['Forebidden']
+            self.forebidden.update(model['Forebidden'])
 
     def addForebiddenLiteral(self, var, state):
         self.forebidden[var] = state

@@ -6,7 +6,7 @@ from Laws.ExpectedUtility import ExpectedUtility
 from Laws.DeontologicalBanList import DeontologicalBanList
 
 from Scenario import Scenario
-
+"""
 s = Scenario('My New Scenario')
 s.addAction('Jump', {'onGround': True}, ['InAir'], 0, -1)
 s.addAction('Not Jump', {'onGround': True}, [], 0, -1)
@@ -25,23 +25,23 @@ s.addValue(1,'falling',1)
 s.addValue(0,'fly', 1)
 
 s.writeToJSON('newFile.json')
+"""
 
 
-
-
+jsonFile = 'Scenarios/TrolleySituation.json'
 s = Scenario()
-s.readFromJSON('Scenarios/TrolleySituation.json')
-
+s.readFromJSON(jsonFile)
 s.addConsideration(ExpectedUtility())
 
 dbl = DeontologicalBanList()
-dbl.addForebiddenLiteral('madeChoice', True)
-dbl.importListFromScenario(fileName='Scenarios/TrolleySituation.json')
+dbl.addForebiddenLiteral('bystander', False)
 s.addConsideration(dbl)
+
 
 of = OutcomeFinder()
 actionBranches =  of.FindOutcomes(s)
 of.ToString()
+
 
 oa = ArgumentGraph(actionBranches, s.Considerations)
 oa.ToString(actionBranches)
