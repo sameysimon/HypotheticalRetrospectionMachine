@@ -61,7 +61,7 @@ class ExpectedUtility(Rule):
         # Nothing was true. Therefore no attacks.
         return 0
 
-
+    # Find the path's utility.
     def __evaluateNewPath(self, path):
         # Create an entry to store this path's utility.
         self.PathUtility[path.ID] = []

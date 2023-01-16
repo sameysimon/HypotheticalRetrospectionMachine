@@ -5,13 +5,13 @@
             "StartTime": 0,
             "EndTime": -1,
             "preconditions":{"madeChoice": false},
-            "effects": ["ChooseApple"]
+            "effect": "ChooseApple"
         },
         "CoinFlip" : {
             "StartTime": 0,
             "EndTime": -1,
             "preconditions": {"madeChoice": false},
-            "effects": ["ChooseCoin"]
+            "effect": "ChooseCoin"
         }
     },
     "Mechanisms": {

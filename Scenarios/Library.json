@@ -1,0 +1,68 @@
+{
+    "Name": "Library",
+    "Actions": {
+        "RecommendClassBook": {
+            "StartTime": 0,
+            "EndTime": -1,
+            "preconditions":{},
+            "effect": "StudentSeesBook"
+        },
+        "DontRecommend" : {
+            "StartTime": 0,
+            "EndTime": -1,
+            "preconditions": {},
+            "effect": "BadTest"
+        }
+    },
+    "Mechanisms": {
+        "StudentSeesBook": {
+            "or": [
+                {"Name": "BookTest", "Value": true, "Type": "Mech", "Probability":0.6}, 
+                {"Name": "BlindTest", "Value": true, "Type": "Mech", "Probability": 0.4}
+            ]
+        },
+        "BookTest": {
+            "and": [
+                {"Name": "GoodTest", "Value": true, "Type": "Mech", "Probability":1},
+                {"Name": "DatabaseHack", "Value": true, "Type": "Mech", "Probability":1}
+            ]
+        },
+        "BlindTest": {
+            "and": [
+                {"Name": "BadTest", "Value": true, "Type": "Mech", "Probability":1},
+                {"Name": "DatabaseHack", "Value": true, "Type": "Mech", "Probability":1}
+            ]
+        },
+        "GoodTest": {
+            "or": [
+                {"Name": "Passed", "Value": true, "Type": "State", "Probability":0.7},
+                {"Name": "Failed", "Value": true, "Type": "State", "Probability":0.3}
+            ]
+        },
+        "BadTest": {
+            "or": [
+                {"Name": "Passed", "Value": true, "Type": "State", "Probability":0.3},
+                {"Name": "Failed", "Value": true, "Type": "State", "Probability":0.7}
+            ]
+        },
+        "DatabaseHack": {
+            "or": [
+                {"Name": "Secret", "Value": false, "Type": "State", "Probability":0.05},
+                {"Name": "Secret", "Value": true, "Type": "State", "Probability":0.95}
+            ]
+        }
+        
+    }
+    ,
+    "State": {
+        "OthersFindTest":false,
+        "Secret":false,
+        "Passed": false,
+        "Failed": false,
+        "StudentDataCompromised": false
+    },
+    "Values": [
+        {"OthersFindTest": -1},
+        {"Passed": 1}
+    ]
+}

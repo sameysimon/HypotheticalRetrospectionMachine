@@ -42,7 +42,6 @@ of = OutcomeFinder()
 actionBranches =  of.FindOutcomes(s)
 of.ToString()
 
-
 oa = ArgumentGraph(actionBranches, s.Considerations)
 oa.ToString(actionBranches)
 oa.findMostAccepted(actionBranches)
