@@ -1,60 +1,40 @@
 from Edge import Edge 
 class ArgumentGraph:
-    def __init__(self, actions, considerations):
+    def __init__(self, scenario):
+        self.actions = scenario.Branches
+        self.Considerations = scenario.Considerations
+
         # Evaluate each action by iterating through its paths
         # Compare each path to every other action's paths and see if they attack each other.
-
         self.edges = []
 
-        # Iterate through first n-1 actions
-        for defenderActionIndex in range(0, len(actions)-1):
+        # Iterate through first n-1 self.actions
+        for defenderActionIndex in range(0, len(self.actions)-1):
             # Iterate through the action's different branches.
-            for defenderPath in actions[defenderActionIndex].PathList:
+            for defenderPath in self.actions[defenderActionIndex].PathList:
                 # Compare this defender action's branch to every other action's branches
-                for attackerActionIndex in range(defenderActionIndex+1, len(actions)):
-                    for attackerPath in actions[attackerActionIndex].PathList:
+                for attackerActionIndex in range(defenderActionIndex+1, len(self.actions)):
+                    for attackerPath in self.actions[attackerActionIndex].PathList:
                         #Check if this branch attacks the other.
-                        compare = self.checkForAttack(attackerPath, defenderPath, considerations)
-                        if compare > 0:
-                            attackerPath.attacks.append(defenderPath)
-                            defenderPath.attackedBy.append(attackerPath)
-                            defenderPath.fullyAccepted = False
-                        if compare == -1 or compare == 2:
-                            defenderPath.attacks.append(attackerPath)
-                            attackerPath.attackedBy.append(defenderPath)
-                            attackerPath.fullyAccepted = False
-                        
-                            
+                        self.checkForAttack(attackerPath, defenderPath)
+
+
         print("built argument tree.\n\n\n")
 
-    # Checks for attack between two paths. 
-    # Returns 0 if no attacks. 1 if attacker attacks defender. -1 if defender attacks attacker. 2 if both attack each other.
-    def checkForAttack(self, pathOne, pathTwo, considerations):
-        oneAttacksTwo = False
-        twoAttacksOne = False
-        conResult = 0
-        for law in considerations:
-            conResult = law.doesAttack(pathOne, pathTwo)
-            if conResult == 1:
-                self.edges.append(Edge(pathOne, pathTwo, law))
-                oneAttacksTwo = True
-            elif conResult==-1:
-                self.edges.append(Edge(pathTwo, pathOne, law))
-                twoAttacksOne = True
-        if oneAttacksTwo and twoAttacksOne:
-            return 2
-        if oneAttacksTwo:
-            return 1
-        if twoAttacksOne:
-            return -1
-        return 0
+    # Checks for attack between two paths.
+    def checkForAttack(self, pathOne, pathTwo):
+        for law in self.Considerations:
+            e = law.doesAttack(pathOne, pathTwo)
+            if e is not None:
+                self.edges.append(e)
+            
                 
 
-    def findMostAccepted(self, actions):
+    def findMostAccepted(self):
         acceptability = {}
-        mostAcceptedActionID = actions[0].ID
+        mostAcceptedActionID = self.actions[0].ID
         allEqualFlag = True
-        for action in actions:
+        for action in self.actions:
             acceptability[action.ID] = 0
             for path in action.PathList:
                 if path.fullyAccepted:
@@ -68,10 +48,10 @@ class ArgumentGraph:
         if allEqualFlag:
             print("This is a true dilemma. No action would seem superior to any other, from any point of retrospection.")
         else:
-            print("Most accepted is " + actions[mostAcceptedActionID].Name)
+            print("Most accepted is " + self.actions[mostAcceptedActionID].Name)
 
-    def ToString(self, actions):
-        for action in actions:
+    def ToString(self):
+        for action in self.actions:
             print("Arguments from " + action.Name + "...")
             for path in action.PathList:
                 print(path.ToString())
@@ -85,12 +65,14 @@ class ArgumentGraph:
                 else:
                     print(output)
 
+    def getNodeList(self):
+        list = {}
+        for act in self.actions:
+            list[act.Name] = act.PathIDList
+        return list
 
-
-                
-
-            
-
-
-    
-
+    def getEdgeList(self):
+        list = []
+        for edge in self.edges:
+            list.append(edge.getTuple())
+        return list

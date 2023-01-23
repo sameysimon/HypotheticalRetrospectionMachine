@@ -1,3 +1,4 @@
+from Probability import Probability
 class Path:
     def __init__(self, ID, state, rootAction) -> None:
         self.ID = ID
@@ -10,9 +11,6 @@ class Path:
         self.Sequence = []
 
         self.fullyAccepted = True
-        
-        self.bestExpectation = 0
-
         self.attacks = []
         self.attackedBy = []
         self.lastAction = ""
@@ -26,14 +24,14 @@ class Path:
     
     def addMech(self, mech, prob, name):
         self.Mech.append(mech)
-        self.Probability *= prob
+        self.Probability = Probability.multiply(prob=prob, value=self.Probability)
         self.Log.append(name + " happened with " + str(prob) + " chance.")
         self.Sequence.append({"Name": name,"Prob":prob, "Type":"Mech"})
 
-    def AddToState(self, variable, value, prob=1, Utilities=[]):
+    def AddToState(self, variable, value, prob=1):
         msg = (variable + " changed from " + str(self.State[variable]) + " to " + str(value) + " with " + str(prob) + " chance.")
         
-        self.Probability *= prob
+        self.Probability = Probability.multiply(prob=prob, value=self.Probability)
 
         self.State[variable] = value
         self.Log.append(msg)
@@ -45,7 +43,7 @@ class Path:
             
 
     def ToString(self):
-        output = "Path ID: " + str(self.ID) + "\n"
+        output = "Path ID: " + str(self.ID) + " Probability:" + str(self.Probability) + "\n"
         for step in self.Sequence:
             if (step['Type'] == 'State'):
                 output += (step['Name'] + " changed to " + str(step['Value']) + " with " + str(step['Prob']) + " chance.")

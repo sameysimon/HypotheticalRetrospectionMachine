@@ -34,16 +34,15 @@
     "State": {
         "madeChoice":false, "getHawaii":false, "getNothing":false, "getApple": false
     },
-
-
-    "Values": [
-        {"getHawaii": 5}, 
-        {"getApple": 1}
-    ],
     
-    "Forebidden": {
-        "getHawaii": true
-    }
+    "Utilities": [
+        [
+            {"Literal": "getHawaii", "Value": true, "Utility": 0}
+        ],
+        [
+            {"Literal": "getApple", "Value": true, "Utility": 1}
+        ]
+    ]
 }
 
 

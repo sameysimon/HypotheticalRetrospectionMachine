@@ -1,0 +1,39 @@
+h1 {
+    color: blue;
+}
+p {
+    color: white
+}
+body {
+    padding: 0;
+    margin: 0;
+}
+.toolBar {
+    width: 100%;
+    margin: 0;
+    padding: 20px 5px 10px 5px;
+    background-color: #222;
+}
+.sideBar {
+    width: 27%;
+    height: 100%;
+    z-index: 1;
+    position: fixed !important;
+}
+.content {
+    margin-left: 27%;
+}
+#cy {
+    width: 100%;
+    height: 700px;
+    display: block;
+}
+tr {
+    width: 100%;
+}
+.numberInput {
+    width: 3rem;
+}
+table {
+    width: 100%;
+}

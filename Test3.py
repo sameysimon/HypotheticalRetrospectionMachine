@@ -1,13 +1,11 @@
+import copy
+
 from Scenario import Scenario
 from Action import Action
 from Path import Path
-import copy
-
 from Laws.ExpectUtility import ExpectedUtility
-from Laws.Deontology import Deontology
-
 from ArgumentGraph import ArgumentGraph
-
+from Edge import Edge
 
 def createLibaryActions(s):
     actions = []
@@ -93,7 +91,7 @@ def createLibaryActions(s):
     p.addMech(s.Mechanisms['DatabaseHack'], 1, 'DatabaseHack')
     p.AddToState('Secret', True, 0.95, s.Utilities)
     a.addPath(p)
-    actions.append(a)
+    s.Branches.append(a)
 
     a = Action(1,"DontRecommend", "BadTest", s)
     p = Path(8,copy.deepcopy(s.InitState), a)
@@ -108,10 +106,9 @@ def createLibaryActions(s):
     
 
 
-    actions.append(a)
+    s.Branches.append(a)
     return actions
 def createCoinActions(s):
-    actions = []
     a = Action(0,"Apple", "ChooseApple", s)
 
     # Student uses book and passes:
@@ -119,7 +116,7 @@ def createCoinActions(s):
     p.AddToState('madeChoice', True, 1, s.Utilities)
     p.AddToState('getApple', True, 1, s.Utilities)
     a.addPath(p)
-    actions.append(a)
+    s.Branches.append(a)
 
     a = Action(1, "CoinFlip", "ChooseCoin", s)
     
@@ -133,23 +130,20 @@ def createCoinActions(s):
     p.addMech(s.Mechanisms['flipCoin'], 1, 'flipCoin')
     p.AddToState('getNothing', True, 0.5, s.Utilities)
     a.addPath(p)
-    actions.append(a)
+    s.Branches.append(a)
     return actions
 
 jsonFile = 'Scenarios/Library.json'
 s = Scenario()
-s.readFromJSON(jsonFile)
+s.readFromJSON('Scenarios/CoinFlip')
 s.addConsideration(ExpectedUtility())
 #s.addConsideration(Deontology(['StudentDataCompromised']))
 
 
-actions = createLibaryActions(s)
-#actions = createCoinActions(s)
+createLibaryActions(s)
+#createCoinActions(s)
 
-graph = ArgumentGraph(actions, s.Considerations)
-graph.ToString(actions)
-graph.findMostAccepted(actions)
-graph.ToGraph(actions)
+graph = ArgumentGraph(s)
 
 
 

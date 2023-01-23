@@ -10,9 +10,18 @@ class Scenario:
         self.Mechanisms = {}
         self.MechConsequences = {}
         self.Utilities = []
+
+
         self.Name = scenarioName
         self.Considerations = []
-        self.openingActions = []
+        self.Branches = []
+
+    def getArgumentList(self):
+        l = {}
+        for branch in self.Branches:
+            for path in branch.PathList:
+                l[path.ID] = path.ToString()
+        return l
 
     def generateActionPaths(self, _consequences):
         actionPathways = []
@@ -83,7 +92,7 @@ class Scenario:
 
 
     def addConsideration(self, rule):
-        rule.addToScenario(self)
+        rule.Scenario = self
         self.Considerations.append(rule)
         
     def writeToJSON(self, fileName):
@@ -91,7 +100,7 @@ class Scenario:
         data['Name'] = self.Name
         data['Actions'] = self.Actions
         data['Mechanisms'] = self.Mechanisms
-        data['Values'] = self.Utilities
+        data['Utilities'] = self.Utilities
         data['State'] = self.InitState
 
         with open(fileName, 'w') as f:
@@ -103,7 +112,7 @@ class Scenario:
             self.Actions = model['Actions']
             self.InitState = model['State']
             self.Mechanisms = model['Mechanisms']
-            self.Utilities = model['Values']
+            self.Utilities = model['Utilities']
 
 
     def addAction(self, name, preConds, effs, start, end):
@@ -125,10 +134,14 @@ class Scenario:
     def addState(self, name, Value):
         self.InitState[name] = Value
     
-    def addValue(self, utilClass, name, util):
-        NumOfUtilClasses = len(self.Utilities)-1
-        for uClass in range(0, utilClass - NumOfUtilClasses):
-            self.Utilities.append({})
-        self.Utilities[utilClass][name] = util
+    def addUtility(self, utilClass, name, state, util):
+        NumOfUtilClasses = len(self.Utilities)
+        print(NumOfUtilClasses)
+        print(utilClass)
+        if utilClass >= NumOfUtilClasses:
+            for uClass in range(0, utilClass - (NumOfUtilClasses-1)):
+                self.Utilities.append([])
+        self.Utilities[utilClass].append({"Literal": name, "Value": state, "Utility": util})        
+        
     
 

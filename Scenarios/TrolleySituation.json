@@ -35,8 +35,16 @@
     "E_Alive":true,
     "F_Alive":true
 },
-"Values": [
-    {"A_Alive": 1, "B_Alive": 1, "C_Alive":1, "D_Alive":1, "E_Alive":1, "F_Alive":1}
+"Utilities": [
+    [
+        {"Literal": "A_Alive", "Value": true, "Utility": 1},
+        {"Literal": "B_Alive", "Value": true, "Utility": 1},
+        {"Literal": "C_Alive", "Value": true, "Utility": 1},
+        {"Literal": "D_Alive", "Value": true, "Utility": 1},
+        {"Literal": "E_Alive", "Value": true, "Utility": 1},
+        {"Literal": "F_Alive", "Value": true, "Utility": 1},
+        {"Literal": "bystander", "Value": true, "Utility": 0}
+    ]
 ],
 "Forebidden": {
     "bystander": false

@@ -3,6 +3,10 @@ class Edge:
         self.source = source
         self.target = target
         self.law = law
+        self.source.attacks.append(self.target)
+        self.target.attackedBy.append(self.source)
+        self.target.fullyAccepted = False
+
 
     def getTuple(self):
         return [self.source.ID, self.target.ID, self.law.Label]

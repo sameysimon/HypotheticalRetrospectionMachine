@@ -61,8 +61,9 @@
         "Failed": false,
         "StudentDataCompromised": false
     },
-    "Values": [
-        {"OthersFindTest": -1},
-        {"Passed": 1}
+    "Utilities": [
+        [
+            {"Literal": "Passed", "Value": true, "Utility": 1}
+        ]
     ]
 }
