@@ -34,7 +34,7 @@
         {% if conUtil == True %}
         checked 
         {% endif %}
-         >
+          >
       </div>
       <div class="formItem">
         <label for="Utilities">Utilities:</label>
@@ -51,10 +51,10 @@
             {% for element in elements %}
               <tr>
                 <th>
-                  <input type="hidden" value='false' name="Remove[]"><input type="checkbox" onclick="this.previousSibling.value = ((this.previousSibling.value=='true') ? 'false' : 'true');">
+                  <input type="hidden" value='false' name="UtilRemove[]"><input type="checkbox" onclick="this.previousSibling.value = ((this.previousSibling.value=='true') ? 'false' : 'true');">
                 </th>
                 <th>
-                  <select name="Literal[]" id="{{ element['literal'] }}Literal">
+                  <select name="UtilLiteral[]" id="{{ element['literal'] }}Literal">
                     {% for lit in literalList %}
                       <option
                       {% if element['Literal'] == lit %}
@@ -65,7 +65,7 @@
                   </select>
                 </th>
                 <th>
-                  <select name="State[]" id="{{ element['literal'] }}State">
+                  <select name="UtilState[]" id="{{ element['literal'] }}State">
                     <option value="True">True</option>
                     <option value="False"
                     {% if element['Value'] == False %}
@@ -74,40 +74,66 @@
                      >False</option>
                   </select>
                 </th>
-                <th><input class="numberInput" value={{ element['Utility'] }} type="number" name="Utility[]" id="{{ element['literal'] }}Utility"></th>
-                <th><input class="numberInput" value={{ class }} type="number" name="Class[]" id="{{ element['literal'] }}Class"></th>
+                <th><input class="numberInput" value={{ element['Utility'] }} type="number" name="UtilUtility[]" id="{{ element['literal'] }}Utility"></th>
+                <th><input class="numberInput" value={{ class }} type="number" name="UtilClass[]" id="{{ element['literal'] }}Class"></th>
               </tr>
             {% endfor %}
           {% endfor %}
 
         </table>
-        <div class="button" onclick="addToTable({{ literalList }})">Add Utility</button>
+        <div class="button" onclick="addToUtilTable({{ literalList }})">Add Utility</button>
       </div>
-      <div class="formItem">
-        <label for="conUtil">Consider Deontology: </label>
-        <input type="checkbox" name="conDeon" id="conDeon">
-
-        <table id="Forebidden">
-          <tr>
-            <th>Literal</th>
-            <th>State</th>
-          </tr>
-          <tr>
-            <th>getNothing</th>
-            <th>
-              <select name="getNothingValue" id="getNothingValue">
-                <option value="True">True</option>
-                <option value="False">False</option>
-                </select>
-            </th>
-          </tr>
-        </table>
-      </div>
-    <input type="hidden" name="envName" value={{ envName }}>
-    <div class="formItem"></div>
-      
-      <button type="submit">Load Environment</button>
     </div>
+    <div class="formItem">
+      <label for="conDeon">Consider Deontology: </label>
+      <input type="checkbox" name="conDeon" id="conDeon"
+      {% if conDeon == True %}
+      checked 
+      {% endif %}
+        >
+    </div>
+    <div class="formItem">
+      <table id="Forebidden">
+        <tr>
+          <th>Remove</th>
+          <th>Literal</th>
+          <th>State</th>
+        </tr>
+        {% for selectedLiteral, selectedState in forebidList.items() %}
+        <tr>
+          <th>
+            <input type="hidden" value='false' name="DeonRemove[]"><input type="checkbox" onclick="this.previousSibling.value = ((this.previousSibling.value=='true') ? 'false' : 'true');">
+          </th>
+          <th>
+            <select name="DeonLiteral[]">
+                {% for lit in literalList %}
+                  <option
+                  {% if selectedLiteral == lit %}
+                  selected 
+                  {% endif %}  
+                    value="{{ lit }}">{{ lit }}</option>
+                {% endfor %}
+            </select>
+          </th>
+          <th>
+            <select name="DeonState[]">
+              <option value="True">True</option>
+              <option value="False"
+              {% if selectedState == False %}
+                selected 
+              {% endif %}
+               >False</option>
+            </select>
+          </th>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+    <input type="hidden" name="envName" value={{ envName }}>  
+    <div class="formItem">
+      <div class="button" onclick="addToDeonTable({{ literalList }})">Add Forebidden Literal</div>
+    </div>
+    <button type="submit">Load Environment</button>
     </form>
   </div>
   

@@ -1,42 +1,57 @@
 import io
 import json
 from Laws.Rule import Rule
+from Edge import Edge
 
 class DeontologicalBanList(Rule):
-    def __init__(self):
+    def __init__(self, forebidden={}, fileName="",):
         self.Label = "Deontological Ban List"
-        self.forebidden = {}
-        self.actionExpectations = {}
+        
+        self.forebidden = forebidden # Forebidden literal values
+        if fileName != "":
+            self.importListFromScenario(fileName=fileName)
 
-    def doesAttack(self, attackerPath, defenderPath):
-        attackerViolates = self.__checkForViolation(attackerPath)
-        defenderViolates = self.__checkForViolation(defenderPath)
-
-        # Find the probability that the attacker's won't violate a rule.
-        if not (attackerPath.rootAction.ID in self.actionExpectations.keys()):
-            self.actionExpectations[attackerPath.rootAction.ID] = 0
-            for alternatePath in attackerPath.rootAction.PathList:
-                if not self.__checkForViolation(alternatePath):
-                    self.actionExpectations[attackerPath.rootAction.ID] += alternatePath.Probability
-
-        # Find the probability that the defender won't violate a rule.
-        if not (defenderPath.rootAction.ID in self.actionExpectations.keys()):
-            self.actionExpectations[defenderPath.rootAction.ID] = 0
-            for alternatePath in defenderPath.rootAction.PathList:
-                if not self.__checkForViolation(alternatePath):
-                    self.actionExpectations[defenderPath.rootAction.ID] += alternatePath.Probability
-
-        if (not attackerViolates) and defenderViolates:
-            if self.actionExpectations[defenderPath.rootAction.ID] < attackerPath.Probability:
-                return 1
-
-        # Check for counter attack (reverse)
-        if (not defenderViolates) and attackerViolates:
-            if self.actionExpectations[attackerPath.rootAction.ID] < defenderPath.Probability:
-                return -1
-
-        return 0
+        self.actionExpectations = {} # Stores action ID to the proability the action doesn't violate a rule.
     
+
+    def doesAttack(self, pathOne, pathTwo):
+        # Check if each makes a violation.
+        pathOneViolates = self.__checkForViolation(pathOne)
+        pathTwoViolates = self.__checkForViolation(pathTwo)
+        attacker = 0
+        defender = 0
+        if pathOneViolates and (not pathTwoViolates):
+            attacker = pathTwo
+            defender = pathOne
+        elif pathTwoViolates and (not pathOneViolates):
+            attacker = pathOne
+            defender = pathTwo
+        else:
+            return None # Neither can attack the other.
+
+        # Find the probability (expectation) of attack
+        attackerExpects = self.__findViolationProbability(attacker)
+        defenderExpects = self.__findViolationProbability(defender)
+
+        if defenderExpects < attackerExpects:
+            # If attacker had greater expectation than defender, then defending path shouldn't have been chosen.
+            return Edge(attacker, defender, self)
+
+                
+    
+    def __findViolationProbability(self, path):
+        # Check probability hasn't already been found and stored. If it has, returns existing value.
+        if not (path.rootAction.ID in self.actionExpectations.keys()):
+            # Iterate through all branching paths for action and sum probability of violation.
+            self.actionExpectations[path.rootAction.ID] = 0
+            for alternatePath in path.rootAction.PathList:
+                if not self.__checkForViolation(alternatePath):
+                    self.actionExpectations[path.rootAction.ID] += alternatePath.Probability
+
+        return self.actionExpectations[path.rootAction.ID]
+
+
+
     # Check the final state, then every intemediate state for a violation of any forebidden state
     def __checkForViolation(self, path):
         # Iterate through all variables with a forebidden rule associated.

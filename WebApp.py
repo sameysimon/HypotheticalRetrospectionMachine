@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, url_for, flash, redirect
 from flask_assets import Bundle, Environment
 
 from Laws.ExpectUtility import ExpectedUtility
+from Laws.DeontologicalBanList import DeontologicalBanList
 from ArgumentGraph import ArgumentGraph
 from Scenario import Scenario
 from ScenarioFactory import ScenarioFactory
@@ -20,7 +21,6 @@ def hello():
         return getDefaultEnv('coinFlip')
 
     env = request.form.get('envName')
-    print('env is ' + str(env))
     if request.form.get('changeEnv') == 'True':
         return getDefaultEnv(env)
     
@@ -33,20 +33,26 @@ def hello():
         ScenarioFactory.createTrolleyActions(s)
 
     conUtil = request.form.get('conUtil') == 'on'
+    conDeon = request.form.get('conDeon') == 'on'
+    forebidden = {}
     if conUtil:
         createUtilities(request, s)
         s.addConsideration(ExpectedUtility())
-    if request.form.get('conDeon') == 'on':
-        # Process literals
-        print("Do deon")
+        
+    if conDeon:
+        forebidden = getForebidden(request)
+        s.addConsideration(DeontologicalBanList(forebidden=forebidden))
+
     
     g = ArgumentGraph(s)
     return render_template('index.html',
     envName=env,
     conUtil=conUtil,
+    conDeon=conDeon,
     nodeList=g.getNodeList(),
     edgeList=g.getEdgeList(),
     argList=s.getArgumentList(),
+    forebidList=forebidden,
     envList=envList,
     utilClasses=s.Utilities,
     literalList=list(s.InitState.keys())
@@ -66,9 +72,11 @@ def getDefaultEnv(env):
     return render_template('index.html',
         envName=env,
         conUtil=True,
+        conDeon=False,
         nodeList=g.getNodeList(),
         edgeList=g.getEdgeList(), 
         argList=s.getArgumentList(),
+        forebidList={},
         envList=envList,
         utilClasses=s.Utilities,
         literalList=list(s.InitState.keys()))
@@ -76,18 +84,25 @@ def getDefaultEnv(env):
 
 def createUtilities(request, scenario):
     scenario.Utilities = []
-    removes =  request.form.getlist('Remove[]')
-    literals = request.form.getlist('Literal[]')
-    states = request.form.getlist('State[]')
-    utilities = request.form.getlist('Utility[]')
-    classes = request.form.getlist('Class[]')
-    print('heyas')
+    removes =  request.form.getlist('UtilRemove[]')
+    literals = request.form.getlist('UtilLiteral[]')
+    states = request.form.getlist('UtilState[]')
+    utilities = request.form.getlist('UtilUtility[]')
+    classes = request.form.getlist('UtilClass[]')
+    
     for i in range(len(literals)):
-        print('hello')
-        print(removes[i])
         if removes[i]=='false':
             state = states[i]=='True'
             scenario.addUtility(int(classes[i]), literals[i], state, int(utilities[i]))
     
     
-
+def getForebidden(request):
+    forebidden = {}
+    removes = request.form.getlist('DeonRemove[]')
+    literals = request.form.getlist('DeonLiteral[]')
+    states = request.form.getlist('DeonState[]')
+    for i in range(0, len(literals)):
+        if removes[i] == 'false':
+            state = states[i]=='True'
+            forebidden[literals[i]] = state
+    return forebidden

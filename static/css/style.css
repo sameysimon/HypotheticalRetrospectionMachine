@@ -15,13 +15,13 @@ body {
     background-color: #222;
 }
 .sideBar {
-    width: 27%;
+    width: 35%;
     height: 100%;
     z-index: 1;
     position: fixed !important;
 }
 .content {
-    margin-left: 27%;
+    margin-left: 35%;
 }
 #cy {
     width: 100%;

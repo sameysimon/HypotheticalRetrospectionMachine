@@ -20,7 +20,7 @@ class Scenario:
         l = {}
         for branch in self.Branches:
             for path in branch.PathList:
-                l[path.ID] = path.ToString()
+                l[path.ID] = path.ToArgument()
         return l
 
     def generateActionPaths(self, _consequences):

@@ -54,6 +54,22 @@ class Path:
             output += '\n'
         return output
 
+    def ToArgument(self):
+        output = "From the initial State, it was right to do " + self.rootAction.Name
+        output += " with probability " + str(self.Probability)
+        output += ", which resulted in state changes: "
+        for index, step in enumerate(self.Sequence):
+            if (step['Type'] == 'State'):
+                output += step['Name'] + " change to " + str(step['Value'])
+                if index == len(self.Sequence) - 1:
+                    output += "."
+                else:
+                    output += ", "
+            
+        return output
+
+
+
     def getArgumentString(self):
         output = "From the initial situation,"
         output += " it was right to do initial action " + self.Actions[0]
