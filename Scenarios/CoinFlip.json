@@ -37,7 +37,7 @@
     
     "Utilities": [
         [
-            {"Literal": "getHawaii", "Value": true, "Utility": 0}
+            {"Literal": "getHawaii", "Value": true, "Utility": 1}
         ],
         [
             {"Literal": "getApple", "Value": true, "Utility": 1}

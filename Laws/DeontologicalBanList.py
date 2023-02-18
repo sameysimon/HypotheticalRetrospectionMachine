@@ -46,7 +46,7 @@ class DeontologicalBanList(Rule):
             self.actionExpectations[path.rootAction.ID] = 0
             for alternatePath in path.rootAction.PathList:
                 if not self.__checkForViolation(alternatePath):
-                    self.actionExpectations[path.rootAction.ID] += alternatePath.Probability
+                    self.actionExpectations[path.rootAction.ID] += alternatePath.Probability.getMidPoint()
 
         return self.actionExpectations[path.rootAction.ID]
 

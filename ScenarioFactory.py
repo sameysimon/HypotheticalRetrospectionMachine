@@ -10,7 +10,7 @@ class ScenarioFactory:
         a = Action(0,"Apple", "ChooseApple", s)
 
         # Student uses book and passes:
-        p = Path(0,copy.deepcopy(s.InitState), a)
+        p = Path("a1b1",copy.deepcopy(s.InitState), a)
         p.AddToState('madeChoice', True, 1)
         p.AddToState('getApple', True, 1)
         a.addPath(p)
@@ -18,17 +18,44 @@ class ScenarioFactory:
 
         a = Action(1, "CoinFlip", "ChooseCoin", s)
         
-        p = Path(1, copy.deepcopy(s.InitState), a)
+        p = Path("a2b1", copy.deepcopy(s.InitState), a)
         p.AddToState('madeChoice', True, 1)
         p.addMech(s.Mechanisms['flipCoin'], 1, 'flipCoin')
         p.AddToState('getHawaii', True, 0.5)
         a.addPath(p)
-        p = Path(2, copy.deepcopy(s.InitState), a)
+        p = Path("a2b2", copy.deepcopy(s.InitState), a)
         p.AddToState('madeChoice', True, 1)
         p.addMech(s.Mechanisms['flipCoin'], 1, 'flipCoin')
         p.AddToState('getNothing', True, 0.5)
         a.addPath(p)
         s.Branches.append(a)
+
+    def createKentCoinActions(s):
+        s.readFromJSON('./Scenarios/CoinFlip.json')
+        a = Action(0,"Apple", "ChooseApple", s)
+
+        # Student uses book and passes:
+        p = Path(0,copy.deepcopy(s.InitState), a)
+        p.AddToState('madeChoice', True, "Certain")
+        p.AddToState('getApple', True, "Certain")
+        a.addPath(p)
+        s.Branches.append(a)
+
+        a = Action(1, "CoinFlip", "ChooseCoin", s)
+        
+        p = Path(1, copy.deepcopy(s.InitState), a)
+        p.AddToState('madeChoice', True, "Certain")
+        p.addMech(s.Mechanisms['flipCoin'], "Certain", 'flipCoin')
+        p.AddToState('getHawaii', True, "Chances about even")
+        a.addPath(p)
+        p = Path(2, copy.deepcopy(s.InitState), a)
+        p.AddToState('madeChoice', True, "Certain")
+        p.addMech(s.Mechanisms['flipCoin'], "Certain", 'flipCoin')
+        p.AddToState('getNothing', True, "Chances about even")
+        a.addPath(p)
+        s.Branches.append(a)
+
+
 
     def createLibaryActions(s):
         s.readFromJSON('Scenarios/Library.json')

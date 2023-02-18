@@ -5,9 +5,9 @@ from Scenario import Scenario
 from ScenarioFactory import ScenarioFactory
 
 s = Scenario()
-ScenarioFactory.createLibaryActions(s)
-s.addConsideration(ExpectedUtility())
-s.addConsideration(DeontologicalBanList(forebidden={"Failed": True}))
+ScenarioFactory.createCoinActions(s)
+#s.addConsideration(ExpectedUtility())
+s.addConsideration(DeontologicalBanList(forebidden={"getApple": True}))
 g = ArgumentGraph(s)
 g.getNodeList()
 g.getEdgeList()

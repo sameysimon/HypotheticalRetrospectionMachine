@@ -60,7 +60,7 @@ class ExpectedUtility(Rule):
         for classElement in self.Scenario.Utilities[utilClass]:
             for altPath in path.rootAction.PathList:
                 if altPath.State[classElement['Literal']] == classElement['Value']:
-                    val += Probability.multiply(altPath.Probability, classElement['Utility'])
+                    val += (altPath.Probability * classElement['Utility'])
         return val
 
     def getPathUtilityOnClass(self, path, utilClass):

@@ -1,8 +1,10 @@
 //import cytoscape from "./cytoscape.esm.min.js";
 Arguments = {}
+Edges = []
 ArgumentDisplay = null
 function setData(actions, edges, _arguments) {
   Arguments = _arguments;
+  Edges = edges
   ArgumentDisplay = document.getElementById('desc');
   showGraph(actions, edges);
 
@@ -13,13 +15,22 @@ function showArgument(evt) {
   var node = evt.target;
   ArgumentDisplay.innerHTML = Arguments[node.id()];
 }
+function showAttack(evt) {
+  console.log('Show Attack');
+  var node = evt.target;
+  ArgumentDisplay.innerHTML = Edges[node.id()][2] + ' attack.'
+
+}
 
 function showGraph(actions, edges) {
   // Create elements list from g
   elements = {nodes: [], edges: []}
-  console.log(edges)
+  actionCount = -1
+
   for (let action in actions) {
-    elements['nodes'].push({data: {id: action}})
+    actionCount = actionCount + 1
+    elements['nodes'].push({data: {id: action, actionIndex: actionCount}})
+
     for (let i=0;i < actions[action].length; i++) {
       elements['nodes'].push({ 
         data: {id: actions[action][i], parent: action}
@@ -29,12 +40,13 @@ function showGraph(actions, edges) {
   
   for (let i=0; i<edges.length; i++) {
     console.log(edges[i])
-    elements['edges'].push({data: {id: edges[i][0].toString() + ',' + edges[i][1].toString(), source: edges[i][0], target: edges[i][1]}});
+    elements['edges'].push({data: {id: i, source: edges[i][0], target: edges[i][1]}});
   }
   
 
   var cy = cytoscape({
     container: document.getElementById('cy'),
+    layout: {name: 'grid', padding: 1 },
     elements: elements,
     style: [ // the stylesheet for the graph
       {
@@ -47,11 +59,10 @@ function showGraph(actions, edges) {
       {
         selector: 'edge',
         style: {
-          'width': 3,
-          'line-color': '#ccc',
-          'curve-style': 'straight',
-          'width': 10,
-          'target-arrow-color': '#c55',
+          'width': 2,
+          'line-color': '#000',
+          'curve-style': 'bezier',
+          'target-arrow-color': 'black',
           'target-arrow-shape': 'triangle'
         }
       },
@@ -60,13 +71,15 @@ function showGraph(actions, edges) {
         css: {
           'text-valign': 'top',
           'text-halign': 'center',
-          'background-color': '#666'
+          'background-color': 'mapData(actionIndex, 0,' + actionCount + ', #6495ED, #de4331)',
+          'shape': 'round-rectangle'
         }
       }
     ]
   }
   );
-
+  cy.fit()
   cy.on('tap', 'node', showArgument)
+  cy.on('tap', 'edge', showAttack)
 
 }

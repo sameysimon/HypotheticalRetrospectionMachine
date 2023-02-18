@@ -5,7 +5,7 @@ class Path:
         self.rootAction = rootAction
         self.Actions = []
         self.Mech = []
-        self.Probability = 1
+        self.Probability = Probability(1)
         self.State = state
         self.Log = []
         self.Sequence = []
@@ -24,14 +24,17 @@ class Path:
     
     def addMech(self, mech, prob, name):
         self.Mech.append(mech)
-        self.Probability = Probability.multiply(prob=prob, value=self.Probability)
+        
+        self.Probability.multiply(Probability(prob))
+
         self.Log.append(name + " happened with " + str(prob) + " chance.")
         self.Sequence.append({"Name": name,"Prob":prob, "Type":"Mech"})
 
     def AddToState(self, variable, value, prob=1):
         msg = (variable + " changed from " + str(self.State[variable]) + " to " + str(value) + " with " + str(prob) + " chance.")
         
-        self.Probability = Probability.multiply(prob=prob, value=self.Probability)
+        #self.Probability = Probability.multiply(prob=prob, value=self.Probability)
+        self.Probability.multiply(Probability(prob))
 
         self.State[variable] = value
         self.Log.append(msg)
@@ -55,26 +58,20 @@ class Path:
         return output
 
     def ToArgument(self):
-        output = "From the initial State, it was right to do " + self.rootAction.Name
-        output += " with probability " + str(self.Probability)
-        output += ", which resulted in state changes: "
-        for index, step in enumerate(self.Sequence):
-            if (step['Type'] == 'State'):
-                output += step['Name'] + " change to " + str(step['Value'])
-                if index == len(self.Sequence) - 1:
-                    output += "."
-                else:
-                    output += ", "
-            
-        return output
-
-
-
-    def getArgumentString(self):
         output = "From the initial situation,"
-        output += " it was right to do initial action " + self.Actions[0]
+        output += " it was right to do action, " + self.rootAction.Name
         output += " resulting in: "
-        for var in self.State:
-            output += var + " is " + self.State[var]
-        output += "\n"
+        for i, step in enumerate(self.Sequence):
+            if step['Type'] == 'State':
+                output += (step['Name'] + " changed to " + str(step['Value']))
+            elif (step['Type'] == 'Mech'):
+                output += (step['Name'] + " happened with " + str(step['Prob']))
+            elif (step['Type'] == 'Action'):
+                output += ("Agent does action " + step['Name'])
+            if i < len(self.Sequence) - 1:
+                output += "; "
+
+        output += ".\n"
+        
+        return output
     

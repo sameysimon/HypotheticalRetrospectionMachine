@@ -40,6 +40,7 @@ def hello():
         s.addConsideration(ExpectedUtility())
         
     if conDeon:
+        print("Add a deontological")
         forebidden = getForebidden(request)
         s.addConsideration(DeontologicalBanList(forebidden=forebidden))
 
@@ -105,4 +106,5 @@ def getForebidden(request):
         if removes[i] == 'false':
             state = states[i]=='True'
             forebidden[literals[i]] = state
+    print(forebidden)
     return forebidden
