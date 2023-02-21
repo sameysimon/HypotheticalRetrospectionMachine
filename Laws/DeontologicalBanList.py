@@ -1,9 +1,8 @@
 import io
 import json
-from Laws.Rule import Rule
 from Edge import Edge
 
-class DeontologicalBanList(Rule):
+class DeontologicalBanList():
     def __init__(self, forebidden={}, fileName="",):
         self.Label = "Deontological Ban List"
         
@@ -35,9 +34,7 @@ class DeontologicalBanList(Rule):
 
         if defenderExpects < attackerExpects:
             # If attacker had greater expectation than defender, then defending path shouldn't have been chosen.
-            return Edge(attacker, defender, self)
-
-                
+            return Edge(attacker, defender, self)         
     
     def __findViolationProbability(self, path):
         # Check probability hasn't already been found and stored. If it has, returns existing value.
@@ -49,8 +46,6 @@ class DeontologicalBanList(Rule):
                     self.actionExpectations[path.rootAction.ID] += alternatePath.Probability.getMidPoint()
 
         return self.actionExpectations[path.rootAction.ID]
-
-
 
     # Check the final state, then every intemediate state for a violation of any forebidden state
     def __checkForViolation(self, path):

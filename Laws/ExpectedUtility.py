@@ -1,8 +1,7 @@
-from Laws.Rule import Rule
 from Probability import Probability
 from Expectation import Expectation
 from Edge import Edge
-class ExpectedUtility(Rule):
+class ExpectedUtility():
     def __init__(self):
         self.Label = "Expected Utility"
         self.PathUtility = {}
@@ -11,8 +10,6 @@ class ExpectedUtility(Rule):
     def doesAttack(self, pathOne, pathTwo):
         pathOneValues = []
         pathTwoValues = []
-        # Find which path attacks the other. (has a higher utility in the highest state)
-        attackerValues = []
         winningClass = 0
         attacker = 0
         defender = 0
@@ -22,13 +19,11 @@ class ExpectedUtility(Rule):
             if pathOneValues[utilClass] < pathTwoValues[utilClass]:
                 attacker = pathTwo
                 defender = pathOne
-                attackerValues = pathTwoValues
                 winningClass = utilClass
                 break
             elif pathOneValues[utilClass] > pathTwoValues[utilClass]:
                 defender = pathTwo
                 attacker = pathOne
-                attackerValues = pathOneValues
                 winningClass = utilClass
                 break
         if attacker == 0:
