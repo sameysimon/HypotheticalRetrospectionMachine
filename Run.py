@@ -6,13 +6,14 @@ from ScenarioFactory import ScenarioFactory
 
 def main():
     s = Scenario()
-    ScenarioFactory.createCoinActions(s)
+    ScenarioFactory.createKentCoinActions(s)
     s.addConsideration(ExpectedUtility())
     #s.addConsideration(DeontologicalBanList(forebidden={"getApple": True}))
     g = ArgumentGraph(s)
     g.getNodeList()
     g.getEdgeList()
-    g.ToString()
+    print(g.ToString())
+    print(g.getMostAccepted())
 
 if __name__ == "__main__":
     main()
