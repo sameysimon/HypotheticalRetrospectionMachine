@@ -26,7 +26,7 @@ class Path:
         self.Mech.append(mech)
         
         print("prob is " + str(prob))
-        self.Probability = self.Probability.multiply(Probability(prob))
+        self.Probability.multiply(Probability(prob))
 
         self.Log.append(name + " happened with " + str(prob) + " chance.")
         self.Sequence.append({"Name": name,"Prob":prob, "Type":"Mech"})
@@ -35,7 +35,7 @@ class Path:
         msg = (variable + " changed from " + str(self.State[variable]) + " to " + str(value) + " with " + str(prob) + " chance.")
         
         print("prob is " + str(prob))
-        self.Probability = self.Probability.multiply(Probability(prob))
+        self.Probability.multiply(Probability(prob))
 
         self.State[variable] = value
         self.Log.append(msg)
@@ -47,7 +47,7 @@ class Path:
             
 
     def ToString(self):
-        output = "Path ID: " + str(self.ID) + " Probability:" + str(self.Probability) + "\n"
+        output = "Path ID: " + str(self.ID) + " Probability:" + self.Probability.ToString() + "\n"
         for step in self.Sequence:
             if (step['Type'] == 'State'):
                 output += (step['Name'] + " changed to " + str(step['Value']) + " with " + str(step['Prob']) + " chance.")

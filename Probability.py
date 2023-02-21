@@ -30,23 +30,28 @@ class Probability:
         if self.numericProb == 1:
             self.numericProb = other.numericProb
             self.poeticProb = other.poeticProb
-        if self.otherProb == 1:
+            self.isPoetic = other.isPoetic
             return
-        
-        
+        if other.numericProb == 1:
+            return
 
-
-    def getKentWord(self):
-        for word in Probability.KentsWords:
-            lowerBound = Probability.KentsWords[word[0]] - Probability.KentsWords[word[1]]
-            upperBound = Probability.KentsWords[word[1]] + Probability.KentsWords[word[1]]
-            if lowerBound <= self.numericProb and self.numericProb <= upperBound:
-                return word
+        self.numericProb = self.numericProb * other.numericProb
+        self.poeticProb = self.getClosestKentWord(self.numericProb)
+        self.isPoetic = self.isInKentRange(self.numericProb)
 
     def getMidPoint(self):
         if not self.isPoetic:
             return self.numericProb
         return Probability.KentsWords[self.poeticProb][0]
+
+    def isInKentRange(self, value):
+        for word in Probability.KentsWords:
+            lowerBound = Probability.KentsWords[word][0] - Probability.KentsWords[word][1]
+            upperBound = Probability.KentsWords[word][0] + Probability.KentsWords[word][1]
+            if lowerBound <= value and value <= upperBound:
+                return True
+        return False
+
 
     def getClosestKentWord(self, value):
         minDistance = 1
