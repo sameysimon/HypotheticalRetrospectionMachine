@@ -39,15 +39,18 @@ function showGraph(actions, edges) {
   }
   
   for (let i=0; i<edges.length; i++) {
-    console.log(edges[i])
     elements['edges'].push({data: {id: i, source: edges[i][0], target: edges[i][1]}});
   }
+  console.log(elements)
   
 
   var cy = cytoscape({
     container: document.getElementById('cy'),
     layout: {name: 'grid', padding: 1 },
-    elements: elements,
+    elements: {
+      nodes: elements['nodes'],
+      edges: elements['edges']
+    },
     style: [ // the stylesheet for the graph
       {
         selector: 'node',

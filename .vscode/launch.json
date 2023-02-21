@@ -10,7 +10,7 @@
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "program": "./Test3.py",
+            "program": "./Run.py",
             "console": "integratedTerminal",
             "justMyCode": true
         }

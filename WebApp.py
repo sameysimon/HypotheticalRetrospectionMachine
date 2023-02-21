@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, url_for, flash, redirect
 from flask_assets import Bundle, Environment
 
-from Laws.ExpectUtility import ExpectedUtility
+from Laws.ExpectedUtility import ExpectedUtility
 from Laws.DeontologicalBanList import DeontologicalBanList
 from ArgumentGraph import ArgumentGraph
 from Scenario import Scenario
@@ -12,40 +12,48 @@ assets = Environment(app)
 js = Bundle('cytoscape.min.js', 'displayGraph.js')
 assets.register('js_all', js)
 
-envList = ['coinFlip', 'library', 'trolley']
+envList = ['CoinApple', 'library', 'trolley', 'PoeticCoinApple']
 
 
 @app.route('/', methods=('GET', 'POST'))
 def hello():
     if request.method != "POST":
-        return getDefaultEnv('coinFlip')
+        return getDefaultEnv('CoinApple')
 
     env = request.form.get('envName')
     if request.form.get('changeEnv') == 'True':
         return getDefaultEnv(env)
     
     s = Scenario()
-    if env=='coinFlip':
+    if env=='CoinApple':
+        print('load coin')
         ScenarioFactory.createCoinActions(s)
     elif env=='library':
+        print('load library')
         ScenarioFactory.createLibaryActions(s)
+    elif env=='PoeticCoinApple':
+        print('load poetic coin apple')
+        ScenarioFactory.createKentCoinActions(s)
     else:
+        print('load trolley')
         ScenarioFactory.createTrolleyActions(s)
 
     conUtil = request.form.get('conUtil') == 'on'
     conDeon = request.form.get('conDeon') == 'on'
     forebidden = {}
     if conUtil:
+        print('Utilitarianism')
         createUtilities(request, s)
         s.addConsideration(ExpectedUtility())
         
     if conDeon:
-        print("Add a deontological")
+        print("Deontology")
         forebidden = getForebidden(request)
         s.addConsideration(DeontologicalBanList(forebidden=forebidden))
 
-    
     g = ArgumentGraph(s)
+    print("Edge List")
+    print(g.getEdgeList())
     return render_template('index.html',
     envName=env,
     conUtil=conUtil,
@@ -60,11 +68,17 @@ def hello():
     )
 
 def getDefaultEnv(env):
+    print('Get Default Env')
     s = Scenario()
-    if env == 'coinFlip':
-        ScenarioFactory.createCoinActions(s)
+    if env == 'CoinApple':
+        print('load coin')
+        ScenarioFactory.createKentCoinActions(s)
     elif env=='library': 
+        print('load library')
         ScenarioFactory.createLibaryActions(s)
+    elif env=='PoeticCoinApple':
+        print('load poetic coin apple')
+        ScenarioFactory.createKentCoinActions(s)
     else:
         ScenarioFactory.createTrolleyActions(s)
     s.addConsideration(ExpectedUtility())

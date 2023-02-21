@@ -1,5 +1,6 @@
 from Laws.Rule import Rule
 from Probability import Probability
+from Expectation import Expectation
 from Edge import Edge
 class ExpectedUtility(Rule):
     def __init__(self):
@@ -32,8 +33,7 @@ class ExpectedUtility(Rule):
                 break
         if attacker == 0:
             return None
-        
-        probDefenderIsBetter = 0
+
         defended = False
         for utilClass in range(0, winningClass+1):
             defenderExpected = self.getExpectedUtilityOnClass(defender, utilClass)
@@ -41,26 +41,16 @@ class ExpectedUtility(Rule):
             if defenderExpected > attackerExpected:
                 defended = True
                 break
-        """
-        for utilClass in range(0, winningClass+1):
-            defenderExpected = self.getExpectedUtilityOnClass(defender, utilClass)
-            
-            if defenderExpected > Probability.multiply(attacker.Probability, attackerValues[utilClass]):
-                defended = True
-                break
-        """
         if defended:
             return None
         return Edge(attacker, defender, self)
-    
-                    
 
     def getExpectedUtilityOnClass(self, path, utilClass):
         val = 0
         for classElement in self.Scenario.Utilities[utilClass]:
             for altPath in path.rootAction.PathList:
                 if altPath.State[classElement['Literal']] == classElement['Value']:
-                    val += (altPath.Probability * classElement['Utility'])
+                    val += Expectation(altPath.Probability, classElement['Utility']).ToNumeric()
         return val
 
     def getPathUtilityOnClass(self, path, utilClass):
@@ -69,11 +59,3 @@ class ExpectedUtility(Rule):
             if path.State[classElement['Literal']] == classElement['Value']:
                 val += classElement['Utility']
         return val
-
-class ExpectedUtilityResult:
-    def __init__(self, _defence, _attack, _class) -> None:
-        self.defenderExpected = _defence
-        self.attackerValue = _attack
-        self.utilityClass = _class
-    def ToString(self):
-        return "On utility class {0}, the attacking argument had a probability weighted value of {1}, greater than the defender's expectation of {2}. So, retrospecting from the defending argument's endpath, the better choice would be ".format(self.utilityClass, self.attackerValue, self.defenderExpected) 

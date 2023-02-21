@@ -2,7 +2,6 @@ import io, copy, json
 from Action import Action
 from Path import Path
 
-
 class Scenario:
     def __init__(self, scenarioName='DefaultScenario'):
         self.Actions = {}
@@ -22,74 +21,6 @@ class Scenario:
             for path in branch.PathList:
                 l[path.ID] = path.ToArgument()
         return l
-
-    def generateActionPaths(self, _consequences):
-        actionPathways = []
-        self.MechConsequences = _consequences
-        actionID = 0
-        time = 0
-        for currAction in self.Actions:
-            self.getAllPaths(self.Actions[currAction]['effect'], "")
-            """
-            if self.checkActionCompatable(currAction, self.InitState, time):
-                actionObj = Action(actionID, currAction, self.Actions[currAction]['effect'], self)
-                actionObj.PathIDRange = self.getMechPathIDs(self.Actions[currAction]['effect'])
-                actionPathways.append(actionObj)
-                actionID+=1
-                """
-
-    # A path ID is the index of the branch pursued on each mech in the path.
-    # So pathID=103 is a path that took branch 1 on the initial mech;
-    # reached a second mech and took branch 0;
-    # reached a third mech and took branch 3.
-    def getMechPathIDs(self, mechName):
-        MechIDRanges = []
-        numOfElements = len(self.MechConsequences[mechName])
-        for branch in self.MechConsequences[mechName]: 
-            # Find the first mech (at the end of this branch, unless there's no mech)
-            lastElement = branch[len(branch)-1]
-            if lastElement['Type'] != 'Mech':
-                # End of branch.
-                # If no branch ranges were added, add this mech's ID range (1)
-                if len(MechIDRanges) == 0:
-                    MechIDRanges.append([1])
-                return MechIDRanges
-            else:
-                # Found another mech down this branch.
-                # Add a branch with the number of this mech's range
-                numOfBranches = len(self.MechConsequences[lastElement['Name']])
-                # Find the last end point's range IDs
-                subMechRanges = self.getMechPathIDs(lastElement['Name'])
-
-                # For each of its ranges, add a range to this mech (since conatinment)
-                for newBranchIndex in range(0, numOfBranches):
-                    newBranch = [numOfBranches]
-                    for subBranchIndex in range(0, len(subMechRanges)):
-                        newBranch = [numOfBranches]
-                        newBranch.extend(subMechRanges[subBranchIndex])
-                        MechIDRanges.append(newBranch)
-                    
-
-                return MechIDRanges# Return it.
-    
-
-    def getAllPaths(self, mechName, header):
-        atEnd = False
-        pathList = []
-        for branchIndex in range(0, len(self.MechConsequences[mechName])):
-            # Add branch index to id
-            newPath = header + str(branchIndex)
-            pathList.append(newPath)
-            for element in self.MechConsequences[mechName][branchIndex]:
-                if element['Type'] == 'Mech':
-                    return self.getAllPaths(element['Name'], newPath)
-            return ""
-
-
-
-    def checkActionCompatable(self, action, state, time):
-        return True
-
 
     def addConsideration(self, rule):
         rule.Scenario = self

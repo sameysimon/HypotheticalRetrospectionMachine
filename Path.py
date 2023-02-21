@@ -25,7 +25,8 @@ class Path:
     def addMech(self, mech, prob, name):
         self.Mech.append(mech)
         
-        self.Probability.multiply(Probability(prob))
+        print("prob is " + str(prob))
+        self.Probability = self.Probability.multiply(Probability(prob))
 
         self.Log.append(name + " happened with " + str(prob) + " chance.")
         self.Sequence.append({"Name": name,"Prob":prob, "Type":"Mech"})
@@ -33,8 +34,8 @@ class Path:
     def AddToState(self, variable, value, prob=1):
         msg = (variable + " changed from " + str(self.State[variable]) + " to " + str(value) + " with " + str(prob) + " chance.")
         
-        #self.Probability = Probability.multiply(prob=prob, value=self.Probability)
-        self.Probability.multiply(Probability(prob))
+        print("prob is " + str(prob))
+        self.Probability = self.Probability.multiply(Probability(prob))
 
         self.State[variable] = value
         self.Log.append(msg)
@@ -70,8 +71,10 @@ class Path:
                 output += ("Agent does action " + step['Name'])
             if i < len(self.Sequence) - 1:
                 output += "; "
+            else:
+                output += ", "
 
-        output += ".\n"
+        output += "with probability, " + self.Probability.ToString() + ".\n"
         
         return output
     
