@@ -1,24 +1,47 @@
-h1 {
-    color: blue;
-}
-p {
-    color: white
-}
 body {
     padding: 0;
     margin: 0;
 }
+
+h1 {
+    color: white;
+    font-family: Helvetica, Sans-Serif;
+}
+p {
+    color: white
+}
+
+.button {
+    margin: 3px;
+    background-color:#e9e9ed;
+    width: fit-content;
+    padding: 3px;
+    border-radius: 2px;
+    cursor:pointer;
+    border: 3px;
+    border-color: black;
+}
+.button:hover {
+    background-color:#bcbcbf;
+}
 .toolBar {
     width: 100%;
     margin: 0;
-    padding: 20px 5px 10px 5px;
-    background-color: #222;
+    padding: 5px 5px 10px 5px;
+    background-color: #555;
+    min-height: 20vh;
 }
 .sideBar {
+    background-color: beige;
+    padding: 4px;
+    box-sizing: border-box;
     width: 35%;
     height: 100%;
     z-index: 1;
     position: fixed !important;
+}
+#mostAccepted {
+    color: black;
 }
 .content {
     margin-left: 35%;

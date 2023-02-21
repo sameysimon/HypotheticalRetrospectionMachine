@@ -20,7 +20,11 @@
         <label for="Env">Choose an Environment:</label>
         <select name="envName" id="Env">
           {% for option in envList %}
-            <option value="{{ option }}">{{ option }}</option>
+            <option 
+            {% if envName == option %}
+            selected 
+            {% endif %} 
+            value="{{ option }}">{{ option }}</option>
           {% endfor %}
         </select>
         <input type="hidden" name="changeEnv" value="True">
@@ -133,14 +137,22 @@
     <div class="formItem">
       <div class="button" onclick="addToDeonTable({{ literalList }})">Add Forebidden Literal</div>
     </div>
-    <button type="submit">Load Environment</button>
-    </form>
+    <div class="formItem">
+      <button type="submit">Load Environment</button>
+      </form>
+  </div>
+  <div class="formItem">
+    <p id="mostAccepted">{{ mostAccepted }}</p>
+  </div>
+
   </div>
   
   <div class="content">
     <div class="toolBar">
-      <h1>Hypothetical Retrospection</h1>
-      <p id='desc' color="green">Words...</p>
+      <h1>Hypothetical Retrospection Machine</h1>
+      <p id='desc'>Each box represents an available action. The nodes represent a hypothetical argument, positively retrospecting on their choice.
+        Attacks on an argument represent negative retrospection, for not choosing the attacker's action.</p>
+      <p>Click the nodes to reveal their aguments. Otherwise, click the edges to reveal the ethical theory behind their attacks.</p>
     </div>
     <div id="cy"></div>
     </div>

@@ -7,6 +7,7 @@ class ArgumentGraph:
         # Evaluate each action by iterating through its paths
         # Compare each path to every other action's paths and see if they attack each other.
         self.edges = []
+        self.isNotAccepted = []
 
         # Iterate through first n-1 self.actions
         for defenderActionIndex in range(0, len(self.actions)-1):
@@ -17,6 +18,8 @@ class ArgumentGraph:
                     for attackerPath in self.actions[attackerActionIndex].PathList:
                         #Check if this branch attacks the other.
                         self.checkForAttack(attackerPath, defenderPath)
+                        if not (defenderPath.ID in self.isNotAccepted):
+                            self.isNotAccepted.append(defenderPath.ID)
 
 
         print("built argument tree.\n\n\n")
@@ -28,42 +31,39 @@ class ArgumentGraph:
             if e is not None:
                 self.edges.append(e)
             
-                
-
-    def findMostAccepted(self):
+    def getMostAccepted(self):
         acceptability = {}
         mostAcceptedActionID = self.actions[0].ID
         allEqualFlag = True
         for action in self.actions:
             acceptability[action.ID] = 0
             for path in action.PathList:
-                if path.fullyAccepted:
-                    acceptability[action.ID] += path.Probability
+                if not (path.ID in self.isNotAccepted):
+                    acceptability[action.ID] += path.Probability.numericProb
             if acceptability[mostAcceptedActionID] != acceptability[path.rootAction.ID]:
                 allEqualFlag = False
             if acceptability[mostAcceptedActionID] < acceptability[path.rootAction.ID]:
                 mostAcceptedActionID = path.rootAction.ID
-            print(action.Name + " acceptability is " + str(acceptability[action.ID]))
             
         if allEqualFlag:
-            print("This is a true dilemma. No action would seem superior to any other, from any point of retrospection.")
+            return "This is a true dilemma. No action would seem superior to any other, from any point of retrospection."
         else:
-            print("Most accepted is " + self.actions[mostAcceptedActionID].Name)
+            return "Most accepted is " + self.actions[mostAcceptedActionID].Name
 
     def ToString(self):
+        output = ""
         for action in self.actions:
-            print("Arguments from " + action.Name + "...")
+            output += "Arguments from " + action.Name + "..."
             for path in action.PathList:
-                print(path.ToString())
-                print("     Attacks... \n")
+                output += path.ToString()
+                output += "     Attacks... \n"
 
-                output = ""
                 for attacks in path.attacks:
                     output += "     a Path with action, " + attacks.rootAction.Name + ". \n"
                 if len(output) == 0:
-                    print("Nothing.\n")
-                else:
-                    print(output)
+                    output+= "Nothing.\n"
+        return output
+                    
 
     def getNodeList(self):
         list = {}

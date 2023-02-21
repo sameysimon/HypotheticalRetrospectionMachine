@@ -42,12 +42,10 @@ def hello():
     conDeon = request.form.get('conDeon') == 'on'
     forebidden = {}
     if conUtil:
-        print('Utilitarianism')
         createUtilities(request, s)
         s.addConsideration(ExpectedUtility())
         
     if conDeon:
-        print("Deontology")
         forebidden = getForebidden(request)
         s.addConsideration(DeontologicalBanList(forebidden=forebidden))
 
@@ -58,6 +56,7 @@ def hello():
     envName=env,
     conUtil=conUtil,
     conDeon=conDeon,
+    mostAccepted=g.getMostAccepted(),
     nodeList=g.getNodeList(),
     edgeList=g.getEdgeList(),
     argList=s.getArgumentList(),
@@ -72,7 +71,7 @@ def getDefaultEnv(env):
     s = Scenario()
     if env == 'CoinApple':
         print('load coin')
-        ScenarioFactory.createKentCoinActions(s)
+        ScenarioFactory.createCoinActions(s)
     elif env=='library': 
         print('load library')
         ScenarioFactory.createLibaryActions(s)
@@ -88,6 +87,7 @@ def getDefaultEnv(env):
         envName=env,
         conUtil=True,
         conDeon=False,
+        mostAccepted=g.getMostAccepted(),
         nodeList=g.getNodeList(),
         edgeList=g.getEdgeList(), 
         argList=s.getArgumentList(),
