@@ -98,6 +98,7 @@ class ScenarioFactory:
         p.addMech(s.Mechanisms['StudentSeesBook'], 1, 'StudentSeesBook')
         p.addMech(s.Mechanisms['BookTest'], 0.6, 'BookTest')
         p.addMech(s.Mechanisms['GoodTest'], 1, 'GoodTest')
+        p.AddToState('StudentDataCompromised', True, 1)
         p.AddToState('Failed', True, 0.3)
         p.addMech(s.Mechanisms['DatabaseHack'], 1, 'DatabaseHack')
         p.AddToState('Secret', True, 0.95)

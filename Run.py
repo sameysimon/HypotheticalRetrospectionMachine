@@ -7,8 +7,10 @@ from ScenarioFactory import ScenarioFactory
 def main():
     s = Scenario()
     ScenarioFactory.createLibraryActions(s)
-    s.addConsideration(ExpectedUtility())
-    #s.addConsideration(DeontologicalBanList(forbidden={"getApple": True}))
+    eu = ExpectedUtility()
+    s.addConsideration(eu)
+    
+    #s.addConsideration(DeontologicalBanList(forbidden={"StudentDataCompromised": True}))
     g = ArgumentGraph(s)
     g.getNodeList()
     g.getEdgeList()

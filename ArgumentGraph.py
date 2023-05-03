@@ -8,7 +8,7 @@ class ArgumentGraph:
         # Compare each path to every other action's paths and see if they attack each other.
         self.edges = []
         self.isNotAccepted = []
-
+    
         # Iterate through first n-1 self.actions
         for defenderActionIndex in range(0, len(self.actions)-1):
             # Iterate through the action's different branches.
@@ -17,19 +17,31 @@ class ArgumentGraph:
                 for attackerActionIndex in range(defenderActionIndex+1, len(self.actions)):
                     for attackerPath in self.actions[attackerActionIndex].PathList:
                         #Check if this branch attacks the other.
-                        self.checkForAttack(attackerPath, defenderPath)
-                        if not (defenderPath.ID in self.isNotAccepted):
+                        result = self.checkForAttack(attackerPath, defenderPath)
+                        if result == 1 and not (defenderPath.ID in self.isNotAccepted):
                             self.isNotAccepted.append(defenderPath.ID)
+                        elif result == -1 and not (attackerPath.ID in self.isNotAccepted):
+                            self.isNotAccepted.append(attackerPath.ID)
 
 
         print("built argument tree.\n\n\n")
 
     # Checks for attack between two paths.
     def checkForAttack(self, pathOne, pathTwo):
+        attackDirection = 0
+        isAttack = False
         for law in self.Considerations:
             e = law.doesAttack(pathOne, pathTwo)
             if e is not None:
                 self.edges.append(e)
+                a = 1 if pathOne.ID == e.source.ID else -1
+                if not isAttack:
+                    attackDirection = a
+                if isAttack and a != attackDirection:
+                    attackDirection = 0
+        return attackDirection
+
+
             
     def getMostAccepted(self):
         acceptability = {}
