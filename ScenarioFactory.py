@@ -57,12 +57,12 @@ class ScenarioFactory:
 
 
 
-    def createLibaryActions(s):
+    def createLibraryActions(s):
         s.readFromJSON('Scenarios/Library.json')
-        a = Action(0,"RecommendClassBook", "StudentSeesBook", s)
+        a = Action(0,"Recommend Book", "StudentSeesBook", s)
 
         # Student uses book and passes:
-        p = Path("a1b1",copy.deepcopy(s.InitState), a)
+        p = Path("b_1",copy.deepcopy(s.InitState), a)
         p.addMech(s.Mechanisms['StudentSeesBook'], 1, 'StudentSeesBook')
         p.addMech(s.Mechanisms['BookTest'], 0.6, 'BookTest')
         p.AddToState('StudentDataCompromised', True, 1)
@@ -73,7 +73,7 @@ class ScenarioFactory:
         a.addPath(p)
         
 
-        p = Path("a1b2",copy.deepcopy(s.InitState), a)
+        p = Path("b_2",copy.deepcopy(s.InitState), a)
         p.addMech(s.Mechanisms['StudentSeesBook'], 1, 'StudentSeesBook')
         p.addMech(s.Mechanisms['BookTest'], 0.6, 'BookTest')
         p.AddToState('StudentDataCompromised', True, 1)
@@ -84,7 +84,7 @@ class ScenarioFactory:
         a.addPath(p)
 
         # Student uses book and fails:
-        p = Path("a1b3",copy.deepcopy(s.InitState), a)
+        p = Path("b_3",copy.deepcopy(s.InitState), a)
         p.addMech(s.Mechanisms['StudentSeesBook'], 1, 'StudentSeesBook')
         p.addMech(s.Mechanisms['BookTest'], 0.6, 'BookTest')
         p.AddToState('StudentDataCompromised', True, 1)
@@ -94,7 +94,7 @@ class ScenarioFactory:
         p.AddToState('OthersFindTest', True, 0.05)
         a.addPath(p)
 
-        p = Path("a1b4",copy.deepcopy(s.InitState), a)
+        p = Path("b_4",copy.deepcopy(s.InitState), a)
         p.addMech(s.Mechanisms['StudentSeesBook'], 1, 'StudentSeesBook')
         p.addMech(s.Mechanisms['BookTest'], 0.6, 'BookTest')
         p.addMech(s.Mechanisms['GoodTest'], 1, 'GoodTest')
@@ -104,7 +104,7 @@ class ScenarioFactory:
         a.addPath(p)
 
         # Student doesn't use book and passes
-        p = Path("a1b5",copy.deepcopy(s.InitState), a)
+        p = Path("b_5",copy.deepcopy(s.InitState), a)
         p.addMech(s.Mechanisms['StudentSeesBook'], 1, 'StudentSeesBook')
         p.addMech(s.Mechanisms['BlindTest'], 0.4, 'BlindTest')
         p.AddToState('StudentDataCompromised', True, 1)
@@ -113,7 +113,7 @@ class ScenarioFactory:
         p.addMech(s.Mechanisms['DatabaseHack'], 1, 'DatabaseHack')
         p.AddToState('OthersFindTest', True, 0.05)
         a.addPath(p)
-        p = Path("a1b6",copy.deepcopy(s.InitState), a)
+        p = Path("b_6",copy.deepcopy(s.InitState), a)
         p.addMech(s.Mechanisms['StudentSeesBook'], 1, 'StudentSeesBook')
         p.addMech(s.Mechanisms['BlindTest'], 0.4, 'BlindTest')
         p.AddToState('StudentDataCompromised', True, 1)
@@ -124,7 +124,7 @@ class ScenarioFactory:
         a.addPath(p)
 
         # Student doesn't use book and fails
-        p = Path("a1b7",copy.deepcopy(s.InitState), a)
+        p = Path("b_7",copy.deepcopy(s.InitState), a)
         p.addMech(s.Mechanisms['StudentSeesBook'], 1, 'StudentSeesBook')
         p.addMech(s.Mechanisms['BlindTest'], 0.4, 'BlindTest')
         p.AddToState('StudentDataCompromised', True, 1)
@@ -133,7 +133,7 @@ class ScenarioFactory:
         p.addMech(s.Mechanisms['DatabaseHack'], 1, 'DatabaseHack')
         p.AddToState('OthersFindTest', True, 0.05)
         a.addPath(p)
-        p = Path("a1b8",copy.deepcopy(s.InitState), a)
+        p = Path("b_8",copy.deepcopy(s.InitState), a)
         p.addMech(s.Mechanisms['StudentSeesBook'], 1, 'StudentSeesBook')
         p.addMech(s.Mechanisms['BlindTest'], 0.4, 'BlindTest')
         p.AddToState('StudentDataCompromised', True, 1)
@@ -145,13 +145,13 @@ class ScenarioFactory:
 
         s.Branches.append(a)
 
-        a = Action(1,"DontRecommend", "BadTest", s)
-        p = Path("a2b1",copy.deepcopy(s.InitState), a)
+        a = Action(1,"Ignore book", "BadTest", s)
+        p = Path("b_9",copy.deepcopy(s.InitState), a)
         p.addMech(s.Mechanisms['BadTest'], 1, 'BadTest')
         p.AddToState('Passed', True, 0.3)
         a.addPath(p)
 
-        p = Path("a2b2",copy.deepcopy(s.InitState), a)
+        p = Path("b_10",copy.deepcopy(s.InitState), a)
         p.addMech(s.Mechanisms['BadTest'], 1, 'BadTest')
         p.AddToState('Failed', True, 0.7)
         a.addPath(p)

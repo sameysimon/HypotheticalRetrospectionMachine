@@ -3,14 +3,14 @@ import json
 from Edge import Edge
 
 class DeontologicalBanList():
-    def __init__(self, forebidden={}, fileName="",):
+    def __init__(self, forbidden={}, fileName="",):
         self.Label = "Deontological Ban List"
         
-        self.forebidden = forebidden # Forebidden literal values
+        self.forbidden = forbidden # forbidden literal values
         if fileName != "":
             self.importListFromScenario(fileName=fileName)
 
-        self.actionExpectations = {} # Stores action ID to the proability the action doesn't violate a rule.
+        self.actionExpectations = {} # Stores action ID to the probability the action doesn't violate a rule.
     
 
     def doesAttack(self, pathOne, pathTwo):
@@ -47,19 +47,19 @@ class DeontologicalBanList():
 
         return self.actionExpectations[path.rootAction.ID]
 
-    # Check the final state, then every intemediate state for a violation of any forebidden state
+    # Check the final state, then every intermediate state for a violation of any forbidden state
     def __checkForViolation(self, path):
-        # Iterate through all variables with a forebidden rule associated.
-        for bannedVar in self.forebidden:
+        # Iterate through all variables with a forbidden rule associated.
+        for bannedVar in self.forbidden:
             # If final state violates the rule, then return as such.
-            finalStateViolates = path.State[bannedVar] == self.forebidden[bannedVar]
+            finalStateViolates = path.State[bannedVar] == self.forbidden[bannedVar]
             if finalStateViolates:
                 return finalStateViolates
             # Go through each step of the path's sequence and check for a state that violates the rule.
             for step in path.Sequence:
                 if step['Type'] == 'State':
-                    if step['Name'] == bannedVar and step['Value'] == self.forebidden[bannedVar]:
-                        # This step changes the state, of the forebiddable variable to the forebidden state.
+                    if step['Name'] == bannedVar and step['Value'] == self.forbidden[bannedVar]:
+                        # This step changes the state, of the forbiddable variable to the forbidden state.
                         # Therefore, it violates the rule and makes a violation.
                         return True   
         return False
@@ -67,7 +67,7 @@ class DeontologicalBanList():
     def importListFromScenario(self, fileName):
         with io.open(fileName) as data:
             model = json.load(data)
-            self.forebidden.update(model['Forebidden'])
+            self.forbidden.update(model['forbidden'])
 
-    def addForebiddenLiteral(self, var, state):
-        self.forebidden[var] = state
+    def addforbiddenLiteral(self, var, state):
+        self.forbidden[var] = state

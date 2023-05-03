@@ -97,13 +97,13 @@
         >
     </div>
     <div class="formItem">
-      <table id="Forebidden">
+      <table id="Forbidden">
         <tr>
           <th>Remove</th>
           <th>Literal</th>
           <th>State</th>
         </tr>
-        {% for selectedLiteral, selectedState in forebidList.items() %}
+        {% for selectedLiteral, selectedState in forbidList.items() %}
         <tr>
           <th>
             <input type="hidden" value='false' name="DeonRemove[]"><input type="checkbox" onclick="this.previousSibling.value = ((this.previousSibling.value=='true') ? 'false' : 'true');">
@@ -135,7 +135,7 @@
     </div>
     <input type="hidden" name="envName" value={{ envName }}>  
     <div class="formItem">
-      <div class="button" onclick="addToDeonTable({{ literalList }})">Add Forebidden Literal</div>
+      <div class="button" onclick="addToDeonTable({{ literalList }})">Add Forbidden Literal</div>
     </div>
     <div class="formItem">
       <button type="submit">Load Environment</button>

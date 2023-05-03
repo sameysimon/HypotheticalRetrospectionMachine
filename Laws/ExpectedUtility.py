@@ -41,7 +41,7 @@ class ExpectedUtility():
         return Edge(attacker, defender, self)
 
     def getExpectedUtilityOnClass(self, path, utilClass):
-        val = 0
+        val = 00
         for classElement in self.Scenario.Utilities[utilClass]:
             for altPath in path.rootAction.PathList:
                 if altPath.State[classElement['Literal']] == classElement['Value']:

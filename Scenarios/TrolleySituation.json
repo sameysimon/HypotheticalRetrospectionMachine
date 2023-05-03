@@ -46,7 +46,7 @@
         {"Literal": "bystander", "Value": true, "Utility": 0}
     ]
 ],
-"Forebidden": {
+"forbidden": {
     "bystander": false
 }
 }

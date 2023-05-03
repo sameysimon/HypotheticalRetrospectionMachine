@@ -57,27 +57,36 @@ function showGraph(actions, edges) {
   // Create elements list from g
   elements = {nodes: [], edges: []}
   actionCount = -1
-
+  maxArgsInAction = 0
+  maxAction = 0
   for (let action in actions) {
     actionCount = actionCount + 1
     elements['nodes'].push({data: {id: action, actionIndex: actionCount}})
 
     for (let i=0;i < actions[action].length; i++) {
       elements['nodes'].push({ 
-        data: {id: actions[action][i], parent: action}
+        data: {id: actions[action][i], parent: action, actionNo: i, branchNo: i}
       });
     } 
+    if (actions[action].length >= maxArgsInAction) {
+      maxArgsInAction = actions[action].length;
+      maxAction = action;
+    }
   }
   
   for (let i=0; i<edges.length; i++) {
     elements['edges'].push({data: {id: i, source: edges[i][0], target: edges[i][1]}});
   }
-  console.log(elements)
+  console.log(elements);
   
+  function test(node) {
+    console.log(node.data('actionNo'), node.data('branchNo'));
+    return node.data('actionNo'), node.data('branchNo');
+  }
 
   var cy = cytoscape({
     container: document.getElementById('cy'),
-    layout: {name: 'grid'},
+    layout: {name: 'grid', position: test, cols: maxArgsInAction, rows:actions.length, spacingFactor:0.5 },
     elements: {
       nodes: elements['nodes'],
       edges: elements['edges']
@@ -203,7 +212,7 @@ function addToUtilTable(literalList, e) {
 
 function addToDeonTable(literalList, e) {
     defaultLit = literalList[0];
-    table = document.getElementById('Forebidden');
+    table = document.getElementById('Forbidden');
     newRow = document.createElement('tr');
     // Create Remove Column
     newCol = document.createElement('th');

@@ -84,7 +84,7 @@ function addToUtilTable(literalList, e) {
 
 function addToDeonTable(literalList, e) {
     defaultLit = literalList[0];
-    table = document.getElementById('Forebidden');
+    table = document.getElementById('Forbidden');
     newRow = document.createElement('tr');
     // Create Remove Column
     newCol = document.createElement('th');

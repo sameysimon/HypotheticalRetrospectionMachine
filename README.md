@@ -4,8 +4,8 @@ The implementation can either used in the Python console or as a Flask webapp.
 
 ### Instructions to Run in Command Line
 To use in the console, ensure you have installed Python 3. The code has been tested with Python 3.8.9
-Run.py shows a basic configuration of the machine with a Coin-Apple Scenario being evaluated with consideration of Expected-Utility Utilitarianim. A Deontological principle to forbid apples can be added by uncommenting the line above.
-The Coin-Apple scenario can be changed from the appropiate function in ScenarioBuilder.py
+Run.py shows a basic configuration of the machine with a Coin-Apple Scenario being evaluated with consideration of Expected-Utility Utilitarianism. A Deontological principle to forbid apples can be added by uncommenting the line above.
+The Coin-Apple scenario can be changed from the appropriate function in ScenarioBuilder.py
 
 ### Instructions to Run from Flask Web-App
 To get a user-interface showing the retrospection visually, you will need to locally host the Flask Web App.
@@ -18,7 +18,7 @@ If you execute the runApp.sh script, it should set the environment variables and
 
 Once you open the web page, go to the side panel to change between the prebuilt Coin-Apple, Library, and Trolley scenarios. 
 Select from drop down and click Change Environment to switch. 
-You can change utilities, utility classes and add deontologically forbidden states below. Click Load Environment to apply changes to the graph.
+You can change utilities, utility classes and add deontological forbidden states below. Click Load Environment to apply changes to the graph.
 You can click on individual nodes to reveal the hypothetical retrospective argument they represent.
 You can click on edges to reveal the ethical theory used in the attack.
 

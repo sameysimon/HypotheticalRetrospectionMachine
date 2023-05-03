@@ -26,28 +26,25 @@ def hello():
     
     s = Scenario()
     if env=='CoinApple':
-        print('load coin')
         ScenarioFactory.createCoinActions(s)
     elif env=='library':
         print('load library')
-        ScenarioFactory.createLibaryActions(s)
+        ScenarioFactory.createLibraryActions(s)
     elif env=='PoeticCoinApple':
-        print('load poetic coin apple')
         ScenarioFactory.createKentCoinActions(s)
     else:
-        print('load trolley')
         ScenarioFactory.createTrolleyActions(s)
 
     conUtil = request.form.get('conUtil') == 'on'
     conDeon = request.form.get('conDeon') == 'on'
-    forebidden = {}
+    forbidden = {}
     if conUtil:
         createUtilities(request, s)
         s.addConsideration(ExpectedUtility())
         
     if conDeon:
-        forebidden = getForebidden(request)
-        s.addConsideration(DeontologicalBanList(forebidden=forebidden))
+        forbidden = getForbidden(request)
+        s.addConsideration(DeontologicalBanList(forbidden=forbidden))
 
     g = ArgumentGraph(s)
     print("Edge List")
@@ -60,23 +57,19 @@ def hello():
     nodeList=g.getNodeList(),
     edgeList=g.getEdgeList(),
     argList=s.getArgumentList(),
-    forebidList=forebidden,
+    forbidList=forbidden,
     envList=envList,
     utilClasses=s.Utilities,
     literalList=list(s.InitState.keys())
     )
 
 def getDefaultEnv(env):
-    print('Get Default Env')
     s = Scenario()
     if env == 'CoinApple':
-        print('load coin')
         ScenarioFactory.createCoinActions(s)
     elif env=='library': 
-        print('load library')
-        ScenarioFactory.createLibaryActions(s)
+        ScenarioFactory.createLibraryActions(s)
     elif env=='PoeticCoinApple':
-        print('load poetic coin apple')
         ScenarioFactory.createKentCoinActions(s)
     else:
         ScenarioFactory.createTrolleyActions(s)
@@ -91,7 +84,7 @@ def getDefaultEnv(env):
         nodeList=g.getNodeList(),
         edgeList=g.getEdgeList(), 
         argList=s.getArgumentList(),
-        forebidList={},
+        forbidList={},
         envList=envList,
         utilClasses=s.Utilities,
         literalList=list(s.InitState.keys()))
@@ -111,14 +104,14 @@ def createUtilities(request, scenario):
             scenario.addUtility(int(classes[i]), literals[i], state, int(utilities[i]))
     
     
-def getForebidden(request):
-    forebidden = {}
+def getForbidden(request):
+    forbidden = {}
     removes = request.form.getlist('DeonRemove[]')
     literals = request.form.getlist('DeonLiteral[]')
     states = request.form.getlist('DeonState[]')
     for i in range(0, len(literals)):
         if removes[i] == 'false':
             state = states[i]=='True'
-            forebidden[literals[i]] = state
-    print(forebidden)
-    return forebidden
+            forbidden[literals[i]] = state
+    print(forbidden)
+    return forbidden
