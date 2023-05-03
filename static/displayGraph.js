@@ -11,12 +11,10 @@ function setData(actions, edges, _arguments) {
 }
 
 function showArgument(evt) {
-  console.log('Show Argument');
   var node = evt.target;
   ArgumentDisplay.innerHTML = Arguments[node.id()];
 }
 function showAttack(evt) {
-  console.log('Show Attack');
   var node = evt.target;
   ArgumentDisplay.innerHTML = Edges[node.id()][2] + ' attack.'
 
@@ -46,7 +44,7 @@ function showGraph(actions, edges) {
 
   var cy = cytoscape({
     container: document.getElementById('cy'),
-    layout: {name: 'grid', padding: 1 },
+    layout: {name: 'grid'},
     elements: {
       nodes: elements['nodes'],
       edges: elements['edges']
